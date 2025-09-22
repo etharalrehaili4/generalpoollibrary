@@ -3,7 +3,6 @@ package com.ntg.lmd.utils
 import android.util.Log
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.messaging.FirebaseMessaging
-import com.ntg.lmd.network.queue.storage.AppDatabase
 import com.ntg.network.authheader.SecureTokenStore
 import com.ntg.network.sockets.SocketIntegration
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +13,6 @@ class LogoutManager(
     private val tokenStore: SecureTokenStore,
     private val userStore: SecureUserStore,
     private val socket: SocketIntegration? = null,
-    private val db: AppDatabase? = null,
 ) {
     private companion object {
         private const val TAG = "LogoutManager"
@@ -54,9 +52,6 @@ class LogoutManager(
             runCatching { socket?.disconnect() }
                 .onSuccess { Log.i(TAG, "Socket disconnected") }
                 .onFailure { Log.w(TAG, "Socket disconnect failed", it) }
-            runCatching { db?.clearAllTables() }
-                .onSuccess { Log.i(TAG, "DB cleared") }
-                .onFailure { Log.w(TAG, "DB clear failed", it) }
             tokenStore.clear()
             Log.i(TAG, "Token store cleared")
 

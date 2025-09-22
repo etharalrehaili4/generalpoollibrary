@@ -1,7 +1,7 @@
 package com.ntg.lmd.authentication.ui.model
 
 import com.ntg.lmd.R
-import com.ntg.lmd.network.queue.NetworkResult
+import com.ntg.lmd.utils.NetworkResult
 import com.ntg.lmd.utils.ValidationError
 
 data class LoginUiState(
