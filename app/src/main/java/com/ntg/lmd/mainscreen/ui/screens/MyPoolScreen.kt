@@ -221,22 +221,4 @@ private fun ordersHorizontalList(
             onCall = { },
         )
     }
-
-//    generalHorizontalList(
-//        orders = state.orders,
-//        callbacks =
-//            HorizontalListCallbacks(
-//                onCenteredOrderChange = { order, index ->
-//                    callbacks.onCenteredOrderChange(order, index)
-//                },
-//                onNearEnd = { idx -> callbacks.onNearEnd(idx) },
-//            ),
-//        cardContent = { order, _ ->
-//            myPoolOrderCardItem(
-//                order = order,
-//                onOpenOrderDetails = callbacks.onOpenOrderDetails,
-//                onCall = { },
-//            )
-//        },
-//    )
 }

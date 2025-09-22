@@ -53,7 +53,7 @@ fun ordersHorizontalList(
 ) {
     Box(Modifier.fillMaxSize()) {
         Box(Modifier.align(Alignment.BottomCenter)) {
-            GeneralHorizontalList<OrderInfo>(
+            GeneralHorizontalList(
                 items = ui.mapOrders,
                 key = { it.orderNumber }, // مفتاح فريد
                 callbacks = GeneralHorizontalListCallbacks(
@@ -72,26 +72,6 @@ fun ordersHorizontalList(
                     onOrderClick = { clicked -> focusOnOrder(clicked, false) },
                 )
             }
-//            generalHorizontalList(
-//                orders = ui.mapOrders,
-//                callbacks =
-//                    HorizontalListCallbacks(
-//                        onCenteredOrderChange = { order, _ ->
-//                            focusOnOrder(order, false)
-//                            viewModel.onOrderSelected(order)
-//                        },
-//                        onNearEnd = { idx ->
-//                            // viewModel.loadNextIfNeeded(idx)
-//                        },
-//                    ),
-//                cardContent = { order, _ ->
-//                    orderCard(
-//                        order = order,
-//                        onAddClick = { onAddToMe(order) },
-//                        onOrderClick = { clicked -> focusOnOrder(clicked, false) },
-//                    )
-//                },
-//            )
         }
     }
 }

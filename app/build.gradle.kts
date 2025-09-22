@@ -191,7 +191,7 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
-    implementation(project(":horizontallist"))
+    implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
 
 
 }
