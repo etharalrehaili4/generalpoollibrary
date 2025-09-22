@@ -6,10 +6,11 @@ import com.ntg.lmd.authentication.data.datasource.model.LoginResponse
 import com.ntg.lmd.authentication.data.datasource.model.User
 import com.ntg.lmd.authentication.data.datasource.remote.api.AuthApi
 import com.ntg.lmd.authentication.domain.repository.AuthRepository
-import com.ntg.lmd.network.authheader.SecureTokenStore
+//import com.ntg.lmd.network.authheader.SecureTokenStore
 import com.ntg.lmd.network.queue.NetworkError
 import com.ntg.lmd.network.queue.NetworkResult
 import com.ntg.lmd.utils.SecureUserStore
+import com.ntg.network.authheader.SecureTokenStore
 
 class AuthRepositoryImp(
     private val loginApi: AuthApi,

@@ -2,8 +2,8 @@ package com.ntg.lmd.network.queue
 
 import android.content.Context
 import androidx.room.Room
-import com.ntg.lmd.network.connectivity.NetworkMonitor
 import com.ntg.lmd.network.queue.storage.AppDatabase
+import com.ntg.network.connectivity.NetworkMonitor
 
 object ServiceLocator {
     private var db: AppDatabase? = null
@@ -18,10 +18,10 @@ object ServiceLocator {
             .build()
             .also { db = it }
 
-    fun requestRepository(ctx: Context): RequestRepository {
-        val dao = database(ctx).requestDao()
-        val retrofit = RetrofitProviderTest.retrofit
-        val network = NetworkMonitor(ctx)
-        return RequestRepository(dao, retrofit, network)
-    }
+//    fun requestRepository(ctx: Context): RequestRepository {
+//        val dao = database(ctx).requestDao()
+//        //val retrofit = RetrofitProviderTest.retrofit
+//        val network = NetworkMonitor(ctx)
+//       // return RequestRepository(dao, retrofit, network)
+//    }
 }

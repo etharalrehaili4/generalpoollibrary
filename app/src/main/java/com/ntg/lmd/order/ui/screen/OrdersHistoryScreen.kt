@@ -13,7 +13,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.ntg.lmd.network.core.RetrofitProvider
 import com.ntg.lmd.order.domain.model.OrderHistoryUi
 import com.ntg.lmd.order.domain.model.OrdersDialogsCallbacks
 import com.ntg.lmd.order.domain.model.OrdersDialogsState
@@ -30,6 +29,7 @@ import com.ntg.lmd.order.ui.components.ordersHistoryMenu
 import com.ntg.lmd.order.ui.components.sharePdf
 import com.ntg.lmd.order.ui.components.verticalListComponent
 import com.ntg.lmd.order.ui.viewmodel.OrderHistoryViewModel
+import com.ntg.network.core.RetrofitFactory
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ import org.koin.androidx.compose.koinViewModel
 fun ordersHistoryRoute(registerOpenMenu: ((() -> Unit) -> Unit)? = null) {
     val vm: OrderHistoryViewModel = koinViewModel()
 
-    val token = RetrofitProvider.tokenStore.getAccessToken() ?: ""
+    val token = RetrofitFactory.tokenStore.getAccessToken() ?: ""
     ordersHistoryStateHolders(vm, token, registerOpenMenu)
 }
 

@@ -1,10 +1,12 @@
 package com.ntg.lmd.network.queue
 
 import android.util.Log
-import com.ntg.lmd.network.connectivity.NetworkMonitor
-import com.ntg.lmd.network.core.networkBoundResource
+//import com.ntg.lmd.network.connectivity.NetworkMonitor
+//import com.ntg.lmd.network.core.networkBoundResource
 import com.ntg.lmd.network.queue.storage.QueuedRequest
 import com.ntg.lmd.network.queue.storage.RequestDao
+import com.ntg.network.connectivity.NetworkMonitor
+import com.ntg.network.core.networkBoundResource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob

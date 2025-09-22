@@ -25,7 +25,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
@@ -44,9 +43,10 @@ import com.ntg.lmd.mainscreen.ui.model.GeneralPoolUiState
 import com.ntg.lmd.mainscreen.ui.model.MapStates
 import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
-import com.ntg.lmd.network.core.RetrofitProvider.userStore
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import com.ntg.lmd.utils.SecureUserStore
+import org.koin.compose.koinInject
 
 // Map / Camera behavior
 private const val INITIAL_MAP_ZOOM = 12f
@@ -65,6 +65,7 @@ fun generalPoolScreen(
     val deviceLatLng by generalPoolViewModel.deviceLatLng.collectAsStateWithLifecycle()
     val hasCenteredOnDevice = remember { mutableStateOf(false) }
     setupInitialCamera(ui, deviceLatLng, cameraPositionState, hasCenteredOnDevice)
+    val userStore: SecureUserStore = koinInject()
     val currentUserId = remember { userStore.getUserId() }
     LaunchedEffect(Unit) {
         generalPoolViewModel.setCurrentUserId(currentUserId)

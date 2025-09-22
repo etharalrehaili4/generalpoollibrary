@@ -31,9 +31,10 @@ import com.ntg.lmd.R
 import com.ntg.lmd.navigation.AppNavConfig
 import com.ntg.lmd.navigation.Screen
 import com.ntg.lmd.navigation.TopBarConfigWithTitle
-import com.ntg.lmd.network.connectivity.NetworkMonitor
+//import com.ntg.lmd.network.connectivity.NetworkMonitor
 import com.ntg.lmd.ui.theme.CupertinoSeparator
 import com.ntg.lmd.ui.theme.CupertinoSystemBackground
+import com.ntg.network.connectivity.NetworkMonitor
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 
