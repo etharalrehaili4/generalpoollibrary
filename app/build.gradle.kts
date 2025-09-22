@@ -193,8 +193,7 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
     // vertical list library
-    implementation(project(":verticalList"))
-
+    implementation("com.github.etharalrehaili4:verticallist:834045a12a")
 
 }
 
