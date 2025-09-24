@@ -9,19 +9,16 @@ import kotlinx.coroutines.flow.update
 internal fun mergeOrders(
     existing: List<OrderInfo>,
     incoming: List<OrderInfo>,
-): List<OrderInfo> {
-    val result: List<OrderInfo> =
-        when {
-            existing.isEmpty() -> incoming
-            incoming.isEmpty() -> existing
-            else -> {
-                val map = existing.associateBy { it.orderNumber }.toMutableMap()
-                for (o in incoming) map[o.orderNumber] = o
-                map.values.toList()
-            }
+): List<OrderInfo> =
+    when {
+        existing.isEmpty() -> incoming
+        incoming.isEmpty() -> existing
+        else -> {
+            val map = existing.associateBy { it.orderNumber }.toMutableMap()
+            for (o in incoming) map[o.orderNumber] = o
+            map.values.toList()
         }
-    return result
-}
+    }
 
 internal fun determineNextSelection(
     merged: List<OrderInfo>,
@@ -33,7 +30,6 @@ internal fun determineNextSelection(
         currentSel == null ->
             merged.firstOrNull { it.lat != 0.0 && it.lng != 0.0 }
                 ?: merged.firstOrNull()
-
         merged.none { it.orderNumber == currentSel.orderNumber } -> null
         else -> merged.firstOrNull { it.orderNumber == currentSel.orderNumber }
     }
@@ -42,9 +38,8 @@ internal fun pickDefaultSelection(
     current: OrderInfo?,
     initial: List<OrderInfo>,
 ): OrderInfo? =
-    current ?: initial.firstOrNull {
-        it.lat != 0.0 && it.lng != 0.0
-    } ?: initial.firstOrNull()
+    current ?: initial.firstOrNull { it.lat != 0.0 && it.lng != 0.0 }
+        ?: initial.firstOrNull()
 
 @Suppress("MaxLineLength")
 fun MutableStateFlow<GeneralPoolUiState>.ensureSelectedStillVisible(update: GeneralPoolUiState.() -> GeneralPoolUiState) {
@@ -73,12 +68,16 @@ fun updateUiWithDistances(
 ): GeneralPoolUiState.() -> GeneralPoolUiState =
     {
         if (updated.isNotEmpty()) lastNonEmpty(updated)
-        copy(orders = updated, selected = nextSelected)
+        copy(orders = updated, selectedOrder = nextSelected)
     }
 
 fun GeneralPoolUiState.removeInvalidSelectionIfNeeded(): GeneralPoolUiState {
-    val sel = selected
-    return if (sel != null && orders.none { it.orderNumber == sel.orderNumber }) copy(selected = null) else this
+    val sel = selectedOrder
+    return if (sel != null && orders.none { it.orderNumber == sel.orderNumber }) {
+        copy(selectedOrder = null)
+    } else {
+        this
+    }
 }
 
 internal fun List<OrderInfo>.poolVisible(currentUserId: String?): List<OrderInfo> =

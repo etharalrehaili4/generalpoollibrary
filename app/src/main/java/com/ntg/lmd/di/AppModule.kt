@@ -1,6 +1,8 @@
 package com.ntg.lmd.di
 
-import com.google.android.gms.location.LocationServices
+import com.ntg.core.location.location.domain.repository.LocationRepository
+import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
+import com.ntg.core.location.location.domain.usecase.GetDeviceLocationsUseCase
 import com.ntg.lmd.BuildConfig
 import com.ntg.lmd.authentication.data.datasource.remote.api.AuthApi
 import com.ntg.lmd.authentication.data.repositoryImp.AuthRepositoryImp
@@ -13,20 +15,16 @@ import com.ntg.lmd.mainscreen.data.datasource.remote.OrdersApi
 import com.ntg.lmd.mainscreen.data.datasource.remote.UpdatetOrdersStatusApi
 import com.ntg.lmd.mainscreen.data.repository.DeliveriesLogRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.LiveOrdersRepositoryImpl
-import com.ntg.lmd.mainscreen.data.repository.LocationRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.MyOrdersRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.UpdateOrdersStatusRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.UsersRepositoryImpl
 import com.ntg.lmd.mainscreen.domain.repository.DeliveriesLogRepository
 import com.ntg.lmd.mainscreen.domain.repository.LiveOrdersRepository
-import com.ntg.lmd.mainscreen.domain.repository.LocationRepository
 import com.ntg.lmd.mainscreen.domain.repository.MyOrdersRepository
 import com.ntg.lmd.mainscreen.domain.repository.UpdateOrdersStatusRepository
 import com.ntg.lmd.mainscreen.domain.repository.UsersRepository
-import com.ntg.lmd.mainscreen.domain.usecase.ComputeDistancesUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetActiveUsersUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetDeliveriesLogFromApiUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.GetDeviceLocationsUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.LoadOrdersUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.OrdersRealtimeUseCase
@@ -52,7 +50,6 @@ import com.ntg.lmd.settings.ui.viewmodel.SettingsViewModel
 import com.ntg.lmd.utils.LogoutManager
 import com.ntg.lmd.utils.SecureUserStore
 import okhttp3.OkHttpClient
-import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
@@ -193,7 +190,7 @@ val MyOrderMyPoolModule =
                 get(),
             )
         }
-        viewModel {
+        viewModel<MyPoolViewModel> {
             MyPoolViewModel(
                 get(),
                 get(),
@@ -210,9 +207,7 @@ val MyOrderMyPoolModule =
 
 val generalPoolModule =
     module {
-
         // repository
-        single<LocationRepository> { LocationRepositoryImpl(get()) }
         single<LiveOrdersRepository> { LiveOrdersRepositoryImpl(get(), get<SocketIntegration>()) }
 
         // Use cases
@@ -233,9 +228,4 @@ val generalPoolModule =
 
         // Api
         single<LiveOrdersApiService> { RetrofitProvider.liveOrderApi }
-    }
-
-val locationModule =
-    module {
-        single { LocationServices.getFusedLocationProviderClient(androidContext()) }
     }

@@ -4,12 +4,12 @@ import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.maps.model.LatLng
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
+import com.ntg.core.location.location.domain.usecase.GetDeviceLocationsUseCase
 import com.ntg.lmd.mainscreen.data.model.Order
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.model.OrderStatus
-import com.ntg.lmd.mainscreen.domain.usecase.ComputeDistancesUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.GetDeviceLocationsUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.LoadOrdersUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.OrdersRealtimeUseCase
 import com.ntg.lmd.mainscreen.ui.mapper.toUi
@@ -39,26 +39,27 @@ class GeneralPoolViewModel(
     private val _events = MutableSharedFlow<GeneralPoolUiEvent>(extraBufferCapacity = 1)
     val events = _events.asSharedFlow()
 
-    private val _deviceLatLng = MutableStateFlow<LatLng?>(null)
-    val deviceLatLng: StateFlow<LatLng?> = _deviceLatLng.asStateFlow()
+    private val _deviceCoordinates = MutableStateFlow<Coordinates?>(null)
+    val deviceCoordinates: StateFlow<Coordinates?> = _deviceCoordinates.asStateFlow()
 
     private var realtimeStarted = false
     private var realtimeJob: Job? = null
 
     private var lastNonEmptyOrders: List<OrderInfo> = emptyList()
     private var userPinnedSelection: Boolean = false
-
     private var currentUserId: String? = null
 
     val onSearchingChange: (Boolean) -> Unit = { v ->
         _ui.update { it.copy(searching = v) }
     }
+
     val onSearchTextChange: (String) -> Unit = { v ->
         _ui.update { it.copy(searchText = v) }
     }
+
     val onOrderSelected: (OrderInfo?) -> Unit = { order ->
         userPinnedSelection = order != null
-        _ui.update { it.copy(selected = order) }
+        _ui.update { it.copy(selectedOrder = order) }
     }
 
     fun setCurrentUserId(id: String?) {
@@ -90,9 +91,9 @@ class GeneralPoolViewModel(
     private suspend fun handleLiveOrders(liveOrders: List<Order>) {
         val incoming = liveOrders.map { it.toUi() }.poolVisible(currentUserId)
         val merged = mergeOrders(_ui.value.orders, incoming).poolVisible(currentUserId)
-        val nextSel = determineNextSelection(merged, _ui.value.selected, userPinnedSelection)
+        val nextSel = determineNextSelection(merged, _ui.value.selectedOrder, userPinnedSelection)
 
-        _ui.update { it.copy(orders = merged, selected = nextSel ?: it.selected) }
+        _ui.update { it.copy(orders = merged, selectedOrder = nextSel ?: it.selectedOrder) }
         if (merged.isNotEmpty()) lastNonEmptyOrders = merged
 
         if (_ui.value.hasLocationPerm) {
@@ -102,6 +103,7 @@ class GeneralPoolViewModel(
                 applyDistances(origin)
             }
         }
+
         _ui.ensureSelectedStillVisible { removeInvalidSelectionIfNeeded() }
     }
 
@@ -127,15 +129,18 @@ class GeneralPoolViewModel(
     }
 
     private fun applyDistances(origin: Location) {
-        val updated = computeDistances(origin, _ui.value.orders)
+        val coords = Coordinates(origin.latitude, origin.longitude)
+        val updated = applyDistancesToOrders(coords, _ui.value.orders)
+
         val nextSelected =
             determineSelectionAfterDistanceUpdate(
-                _ui.value.selected,
+                _ui.value.selectedOrder,
                 updated,
                 userPinnedSelection,
             )
+
         _ui.update(updateUiWithDistances(updated, nextSelected) { lastNonEmptyOrders = it })
-        _deviceLatLng.value = LatLng(origin.latitude, origin.longitude)
+        _deviceCoordinates.value = coords
         _ui.ensureSelectedStillVisible { this }
     }
 
@@ -146,13 +151,13 @@ class GeneralPoolViewModel(
             result
                 .onSuccess { allOrders ->
                     val initial = allOrders.map { it.toUi() }.poolVisible(currentUserId)
-                    val defaultSel = pickDefaultSelection(_ui.value.selected, initial)
+                    val defaultSel = pickDefaultSelection(_ui.value.selectedOrder, initial)
                     userPinnedSelection = false
                     _ui.update {
                         it.copy(
                             orders = initial,
                             isLoading = false,
-                            selected = defaultSel,
+                            selectedOrder = defaultSel,
                             errorMessage = null,
                         )
                     }
@@ -172,8 +177,28 @@ class GeneralPoolViewModel(
         }
     }
 
-    // show only orders with "Added" status and not mine so I can add to me later
-    private fun List<OrderInfo>.poolVisible(): List<OrderInfo> =
+    fun removeOrderFromPool(orderId: String) {
+        _ui.update { cur ->
+            val newOrders = cur.orders.filterNot { it.id == orderId }
+            cur.copy(
+                orders = newOrders,
+                selectedOrder = cur.selectedOrder?.takeIf { it.id != orderId },
+            )
+        }
+    }
+
+    private fun applyDistancesToOrders(
+        origin: Coordinates,
+        orders: List<OrderInfo>,
+    ): List<OrderInfo> {
+        val coords = orders.map { Coordinates(it.lat, it.lng) }
+        val distances = computeDistances.computeDistances(origin, coords)
+        return orders
+            .zip(distances) { order, dist -> order.copy(distanceKm = dist) }
+            .sortedBy { it.distanceKm }
+    }
+
+    private fun List<OrderInfo>.poolVisible(currentUserId: String?): List<OrderInfo> =
         filter { info ->
             val mine =
                 currentUserId?.let { uid ->
@@ -181,12 +206,4 @@ class GeneralPoolViewModel(
                 } ?: false
             info.status == OrderStatus.ADDED && !mine
         }
-
-    // after adding order to me, remove it from pool
-    fun removeOrderFromPool(orderId: String) {
-        _ui.update { cur ->
-            val newOrders = cur.orders.filterNot { it.id == orderId }
-            cur.copy(orders = newOrders, selected = cur.selected?.takeIf { it.id != orderId })
-        }
-    }
 }
