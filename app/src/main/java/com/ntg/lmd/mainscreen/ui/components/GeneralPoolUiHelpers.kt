@@ -13,18 +13,23 @@ import androidx.compose.ui.unit.dp
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.ui.model.GeneralPoolUiState
-import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 
 @Composable
 fun poolBottomContent(
     ui: GeneralPoolUiState,
-    viewModel: GeneralPoolViewModel,
+    onOrderSelected: (OrderInfo) -> Unit,
     focusOnOrder: (OrderInfo, Boolean) -> Unit,
     onAddToMe: (OrderInfo) -> Unit,
 ) {
     when {
         ui.isLoading -> loadingText()
-        ui.mapOrders.isNotEmpty() -> ordersHorizontalList(ui, viewModel, focusOnOrder, onAddToMe)
+        ui.markers.isNotEmpty() ->
+            ordersHorizontalList(
+                ui = ui,
+                focusOnOrder = focusOnOrder,
+                onAddToMe = onAddToMe,
+                onOrderSelected = onOrderSelected,
+            )
     }
 }
 
@@ -35,7 +40,7 @@ fun loadingText() {
             text = stringResource(R.string.loading_text),
             modifier =
                 Modifier
-                    .align(Alignment.BottomStart)
+                    .align(Alignment.Center)
                     .padding(16.dp),
             color = MaterialTheme.colorScheme.onBackground,
         )
@@ -45,22 +50,19 @@ fun loadingText() {
 @Composable
 fun ordersHorizontalList(
     ui: GeneralPoolUiState,
-    viewModel: GeneralPoolViewModel,
     focusOnOrder: (OrderInfo, Boolean) -> Unit,
     onAddToMe: (OrderInfo) -> Unit,
+    onOrderSelected: (OrderInfo) -> Unit,
 ) {
     Box(Modifier.fillMaxSize()) {
         Box(Modifier.align(Alignment.BottomCenter)) {
             generalHorizontalList(
-                orders = ui.mapOrders,
+                orders = ui.filteredOrdersInRange,
                 callbacks =
                     HorizontalListCallbacks(
                         onCenteredOrderChange = { order, _ ->
                             focusOnOrder(order, false)
-                            viewModel.onOrderSelected(order)
-                        },
-                        onNearEnd = { idx ->
-                            // viewModel.loadNextIfNeeded(idx)
+                            onOrderSelected(order)
                         },
                     ),
                 cardContent = { order, _ ->

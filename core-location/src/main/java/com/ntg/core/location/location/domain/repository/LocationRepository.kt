@@ -1,4 +1,4 @@
-package com.ntg.lmd.mainscreen.domain.repository
+package com.ntg.core.location.location.domain.repository
 
 import android.location.Location
 

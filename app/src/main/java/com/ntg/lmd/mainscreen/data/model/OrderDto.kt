@@ -1,6 +1,7 @@
 package com.ntg.lmd.mainscreen.data.model
 
 import com.google.gson.annotations.SerializedName
+import com.ntg.core.location.location.domain.model.Coordinates
 
 data class OrdersEnvelope(
     val success: Boolean,
@@ -52,7 +53,7 @@ data class OrderDto(
     val slaMet: String?,
     @SerializedName("serial_number")
     val serialNumber: String?,
-    val coordinates: CoordinatesDto?,
+    val coordinates: Coordinates?,
     @SerializedName("last_updated")
     val lastUpdated: String?,
     val orderstatuses: OrderStatusDto?,
@@ -61,11 +62,6 @@ data class OrderDto(
     val distributioncenters: Any?,
     @SerializedName("distance_km")
     val distanceKm: Double?,
-)
-
-data class CoordinatesDto(
-    val latitude: Double?,
-    val longitude: Double?,
 )
 
 data class OrderStatusDto(

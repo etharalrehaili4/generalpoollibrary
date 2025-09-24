@@ -1,10 +1,10 @@
-package com.ntg.lmd.mainscreen.data.repository
+package com.ntg.core.location.location.data.repository
 
 import android.annotation.SuppressLint
 import android.location.Location
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.Priority
-import com.ntg.lmd.mainscreen.domain.repository.LocationRepository
+import com.ntg.core.location.location.domain.repository.LocationRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlin.coroutines.resume
 

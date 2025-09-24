@@ -155,11 +155,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     // animation
     implementation(libs.androidx.animation)
-    // Google Maps
-    implementation(libs.play.services.maps)
-    implementation(libs.maps.compose)
-    // Play Services for current location
-    implementation(libs.play.services.location)
+
     // Icons
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.material)
@@ -191,7 +187,7 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
-
+    implementation(project(":core-location"))
 }
 
 // Custom tasks for code quality checks

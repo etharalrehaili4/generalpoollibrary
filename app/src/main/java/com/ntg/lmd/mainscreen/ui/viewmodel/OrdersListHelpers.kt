@@ -1,10 +1,10 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import android.content.Context
-import android.location.Location
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.model.OrderStatus
-import com.ntg.lmd.mainscreen.domain.usecase.ComputeDistancesUseCase
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,19 +54,33 @@ class OrdersListHelpers(
     }
 
     fun computeDisplay(
-        location: Location?,
+        coords: Coordinates?,
         source: List<OrderInfo>,
         query: String?,
         uid: String?,
     ): List<OrderInfo> {
         val filtered = applyDisplayFilter(source, query.orEmpty(), uid)
-        return withDistances(location, filtered)
+        return withDistances(coords, filtered)
     }
 
     fun withDistances(
-        location: Location?,
+        coords: Coordinates?,
         list: List<OrderInfo>,
-    ): List<OrderInfo> = if (location != null) computeDistancesUseCase(location, list) else list
+    ): List<OrderInfo> {
+        if (coords == null) return list
+
+        // Build list of coordinates from orders
+        val targets = list.map { Coordinates(it.lat, it.lng) }
+
+        // Call use case correctly
+        val distances = computeDistancesUseCase.computeDistances(coords, targets)
+
+        // Merge distances back into orders
+        return list
+            .zip(distances) { order, dist ->
+                order.copy(distanceKm = dist)
+            }.sortedBy { it.distanceKm }
+    }
 
     fun handlePagingError(
         msg: String,
