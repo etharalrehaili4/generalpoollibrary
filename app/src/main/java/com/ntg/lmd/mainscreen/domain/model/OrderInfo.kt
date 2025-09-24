@@ -1,5 +1,7 @@
 package com.ntg.lmd.mainscreen.domain.model
 
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.model.MapMarker
 import com.ntg.lmd.order.domain.model.OrderStatusCode
 
 sealed class RelativeTime {
@@ -72,3 +74,12 @@ fun OrderStatus.toApiId(): Int =
         OrderStatus.DELIVERY_FAILED -> OrderStatusCode.FAILED.code
         OrderStatus.DELIVERY_DONE -> OrderStatusCode.DONE.code
     }
+
+fun OrderInfo.toMapMarker(): MapMarker =
+    MapMarker(
+        id = orderNumber,
+        title = name,
+        coordinates = Coordinates(lat, lng),
+        distanceKm = distanceKm,
+        snippet = orderNumber,
+    )

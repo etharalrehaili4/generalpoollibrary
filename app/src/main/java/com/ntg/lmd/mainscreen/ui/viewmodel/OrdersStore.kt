@@ -1,6 +1,6 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
-import android.location.Location
+import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class OrdersStore(
     val state: MutableStateFlow<MyOrdersUiState>,
     val currentUserId: MutableStateFlow<String?>,
-    val deviceLocation: MutableStateFlow<Location?>,
+    val deviceLocation: MutableStateFlow<Coordinates?>,
     val allOrders: MutableList<OrderInfo> = mutableListOf(),
 ) {
     var page: Int = 1

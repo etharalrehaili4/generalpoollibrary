@@ -1,5 +1,6 @@
 package com.ntg.lmd.mainscreen.ui.screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -18,38 +19,40 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.MarkerState
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.model.IMapStates
+import com.ntg.core.location.location.domain.model.MapMarker
+import com.ntg.core.location.location.domain.repository.LocationProvider
+import com.ntg.core.location.location.screen.component.initialCameraPositionEffect
+import com.ntg.core.location.location.screen.component.locationPermissionHandler
+import com.ntg.core.location.location.screen.component.provideMapStates
+import com.ntg.core.location.location.screen.component.rememberFocusOnMarker
+import com.ntg.core.location.location.screen.mapScreen
 import com.ntg.horizontallist.GeneralHorizontalList
 import com.ntg.horizontallist.GeneralHorizontalListCallbacks
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
-import com.ntg.lmd.mainscreen.ui.components.initialCameraPositionEffect
-import com.ntg.lmd.mainscreen.ui.components.locationPermissionHandler
-import com.ntg.lmd.mainscreen.ui.components.mapCenter
 import com.ntg.lmd.mainscreen.ui.components.myPoolOrderCardItem
-import com.ntg.lmd.mainscreen.ui.components.rememberFocusOnMyOrder
-import com.ntg.lmd.mainscreen.ui.model.MapStates
-import com.ntg.lmd.mainscreen.ui.model.MapUiState
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersPoolUiState
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
 
-private val ZERO_LATLNG = LatLng(0.0, 0.0)
+// Zero fallback coordinates
+private val ZERO_COORDS = Coordinates(0.0, 0.0)
 
 private data class MapOverlayState(
     val isLoading: Boolean,
     val isLoadingMore: Boolean,
     val orders: List<OrderInfo>,
     val bottomPadding: Dp,
-    val mapUi: MapUiState,
-    val mapStates: MapStates,
+    val mapUi: MyOrdersPoolUiState,
+    val mapStates: IMapStates,
 )
 
 private data class MapOverlayCallbacks(
@@ -60,9 +63,6 @@ private data class MapOverlayCallbacks(
 )
 
 @Composable
-fun rememberMapStates(): MapStates = remember { MapStates(CameraPositionState(), MarkerState(ZERO_LATLNG)) }
-
-@Composable
 fun myPoolScreen(
     viewModel: MyPoolViewModel = koinViewModel(),
     onOpenOrderDetails: (String) -> Unit,
@@ -70,22 +70,24 @@ fun myPoolScreen(
     val ui by viewModel.ui.collectAsState()
     var bottomBarHeight by remember { mutableStateOf(0.dp) }
 
+    // decoupled location permission handling
+    val context = LocalContext.current
+    val locationProvider: LocationProvider = get()
+
     locationPermissionHandler(
-        onPermissionGranted =
-            @androidx.annotation.RequiresPermission(
-                allOf = [
-                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                ],
-            ) { ctx ->
-                val fused = LocationServices.getFusedLocationProviderClient(ctx)
-                fused.lastLocation.addOnSuccessListener { loc ->
-                    viewModel.updateDeviceLocation(loc)
-                }
-            },
+        onPermissionGranted = {
+            locationProvider.getLastKnownLocation(context) { coords ->
+                viewModel.updateDeviceLocation(coords)
+                Log.d("MyPoolScreen", "Got device coords = $coords")
+            }
+        },
+        onPermissionDenied = {
+            Log.w("MyPoolScreen", "Location permission denied")
+        },
     )
-    val mapStates = rememberMapStates()
-    initialCameraPositionEffect(ui.orders, ui.selectedOrderNumber, mapStates)
+
+    val mapStates = provideMapStates()
+    initialCameraPositionEffect(ui.markers, ui.selectedMarkerId, mapStates)
 
     val state = overlayState(ui, bottomBarHeight, mapStates)
     val callbacks =
@@ -104,7 +106,7 @@ fun myPoolScreen(
 private fun overlayState(
     ui: MyOrdersPoolUiState,
     bottomBarHeight: Dp,
-    mapStates: MapStates,
+    mapStates: IMapStates,
 ): MapOverlayState {
     val extra = dimensionResource(R.dimen.largeSpace)
     return MapOverlayState(
@@ -120,24 +122,39 @@ private fun overlayState(
 @Composable
 private fun rememberOverlayCallbacks(
     viewModel: MyPoolViewModel,
-    mapStates: MapStates,
+    mapStates: IMapStates,
     onOpenOrderDetails: (String) -> Unit,
     onNearEnd: (Int) -> Unit,
     setBottomBarHeight: (Dp) -> Unit,
 ): MapOverlayCallbacks {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
+
     val focus =
-        rememberFocusOnMyOrder(
-            viewModel = viewModel,
-            markerState = mapStates.markerState,
-            cameraPositionState = mapStates.cameraPositionState,
+        rememberFocusOnMarker(
+            onCenterChange = { marker ->
+                // find matching order for marker
+                val order =
+                    viewModel.ui.value.orders
+                        .firstOrNull { it.id == marker.id }
+                order?.let { viewModel.onCenteredOrderChange(it) }
+            },
+            mapStates = mapStates,
             scope = scope,
         )
+
     return MapOverlayCallbacks(
         onBottomHeightMeasured = { px -> setBottomBarHeight(with(density) { px.toDp() }) },
         onCenteredOrderChange = { order, index ->
-            focus(order, false)
+            val marker =
+                MapMarker(
+                    id = order.id,
+                    title = order.name,
+                    coordinates = Coordinates(order.lat, order.lng),
+                    distanceKm = order.distanceKm,
+                    snippet = order.orderNumber,
+                )
+            focus(marker)
             viewModel.onCenteredOrderChange(order, index)
         },
         onOpenOrderDetails = onOpenOrderDetails,
@@ -151,14 +168,14 @@ private fun mapWithBottomOverlay(
     callbacks: MapOverlayCallbacks,
 ) {
     Box(Modifier.fillMaxSize()) {
-        mapCenter(
+        mapScreen(
             ui = state.mapUi,
             mapStates = state.mapStates,
-            deviceLatLng = ZERO_LATLNG,
+            deviceLatLng = ZERO_COORDS,
             bottomOverlayPadding = state.bottomPadding,
         )
         if (state.orders.isNotEmpty()) {
-            bottomOverlay(state, callbacks) // now a BoxScope extension
+            bottomOverlay(state, callbacks)
         }
         if (state.isLoading) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))

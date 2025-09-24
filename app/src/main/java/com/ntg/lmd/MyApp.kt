@@ -1,11 +1,11 @@
 package com.ntg.lmd
 
 import android.app.Application
+import com.ntg.core.location.di.locationModule
 import com.ntg.lmd.di.MyOrderMyPoolModule
 import com.ntg.lmd.di.authModule
 import com.ntg.lmd.di.deliveriesLogModule
 import com.ntg.lmd.di.generalPoolModule
-import com.ntg.lmd.di.locationModule
 import com.ntg.lmd.di.monitorModule
 import com.ntg.lmd.di.networkModule
 import com.ntg.lmd.di.ordersHistoryModule

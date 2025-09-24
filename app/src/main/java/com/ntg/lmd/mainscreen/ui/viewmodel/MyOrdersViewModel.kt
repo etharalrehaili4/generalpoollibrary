@@ -1,8 +1,8 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
-import android.location.Location
 import androidx.lifecycle.ViewModel
-import com.ntg.lmd.mainscreen.domain.usecase.ComputeDistancesUseCase
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState
 import com.ntg.lmd.utils.SecureUserStore
@@ -19,7 +19,7 @@ class MyOrdersViewModel(
     val uiState: StateFlow<MyOrdersUiState> = _uiState.asStateFlow()
 
     private val currentUserId = MutableStateFlow<String?>(userStore.toString())
-    private val deviceLocation = MutableStateFlow<Location?>(null)
+    private val deviceLocation = MutableStateFlow<Coordinates?>(null)
 
     // Shared store across sub-ViewModels
     private val store =

@@ -155,11 +155,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     // animation
     implementation(libs.androidx.animation)
-    // Google Maps
-    implementation(libs.play.services.maps)
-    implementation(libs.maps.compose)
-    // Play Services for current location
-    implementation(libs.play.services.location)
+
     // Icons
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.material)
@@ -194,8 +190,12 @@ dependencies {
     implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
 
 
-}
+    // vertical list library
+    implementation("com.github.etharalrehaili4:verticallist:834045a12a")
 
+    //location lib
+    implementation("com.github.R-0515:core-location:-SNAPSHOT")
+}
 // Custom tasks for code quality checks
 tasks.register("checkUnusedAssets") {
     group = "verification"

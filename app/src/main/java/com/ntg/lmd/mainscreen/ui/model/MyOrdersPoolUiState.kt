@@ -1,6 +1,8 @@
 package com.ntg.lmd.mainscreen.ui.model
 
-import android.util.Log
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.model.MapMarker
+import com.ntg.core.location.location.domain.model.MapUiState
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 
 data class MyOrdersPoolUiState(
@@ -12,11 +14,35 @@ data class MyOrdersPoolUiState(
     override val distanceThresholdKm: Double = Double.MAX_VALUE,
     override val hasLocationPerm: Boolean = false,
 ) : MapUiState {
-    override val mapOrders: List<OrderInfo>
-        get() {
-            Log.d("MAP", "Orders on map: ${orders.size}")
-            return orders
-        }
-    override val selected: OrderInfo?
-        get() = orders.find { it.orderNumber == selectedOrderNumber }
+    companion object {
+        private const val MAX_LATITUDE = 90.0
+        private const val MAX_LONGITUDE = 180.0
+    }
+
+    override val markers: List<MapMarker>
+        get() =
+            orders
+                .filter {
+                    it.lat.isFinite() &&
+                        it.lng.isFinite() &&
+                        !(it.lat == 0.0 && it.lng == 0.0) &&
+                        kotlin.math.abs(it.lat) <= MAX_LATITUDE &&
+                        kotlin.math.abs(it.lng) <= MAX_LONGITUDE
+                }.map {
+                    MapMarker(
+                        id = it.id,
+                        title = it.name,
+                        coordinates = Coordinates(it.lat, it.lng),
+                        distanceKm = it.distanceKm,
+                        snippet = it.orderNumber,
+                    )
+                }.let { base ->
+                    if (!hasLocationPerm) return@let base
+                    val anyFinite = base.any { it.distanceKm.isFinite() }
+                    if (!anyFinite) return@let emptyList()
+                    base.filter { it.distanceKm.isFinite() && it.distanceKm <= distanceThresholdKm }
+                }
+
+    override val selectedMarkerId: String?
+        get() = selectedOrderNumber
 }
