@@ -191,7 +191,7 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
-    implementation("com.github.Raghad-almehmadi:network_module:4b149109fe")
+    implementation("com.github.Raghad-almehmadi:network_library:3")
 
 }
 

@@ -54,14 +54,11 @@ import com.ntg.network.authheader.SecureTokenStore
 import com.ntg.network.authheader.TokenStore
 import com.ntg.network.connectivity.NetworkMonitor
 import com.ntg.network.core.RetrofitFactory
-import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import com.ntg.network.sockets.SocketIntegration
 import com.ntg.network.sockets.ChangeHandler
-import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.core.qualifier.named
 
 val authModule = module {
     // SecureUserStore
@@ -93,25 +90,24 @@ val networkModule = module {
 
 val socketModule = module {
     single { Gson() }
+    single<TokenStore> { SecureTokenStore(androidContext()) }
     single { OrderStore() }
-    single<ChangeHandler> { OrdersChangeHandler(get(), get()) }
-
-    single(named("wsClient")) {
-        OkHttpClient.Builder()
-            .addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-            .build()
-    }
+    single<ChangeHandler> { OrdersChangeHandler(gson = get(), store = get()) }
 
     single {
         SocketIntegration(
             baseWsUrl = BuildConfig.WS_BASE_URL,
-            client = get(named("wsClient")),
             tokenStore = get<TokenStore>(),
-            handler = get<ChangeHandler>()
-        )
+            handler = get<ChangeHandler>(),
+            enableLogging = true
+        ).apply {
+            (get<TokenStore>() as? SecureTokenStore)?.onTokensChanged = { access, _ ->
+                reconnectIfTokenChanged(access)
+            }
+        }
     }
 
-    single { OrdersSocketBridge(get<SocketIntegration>(), get<OrderStore>(), get<Gson>()) }
+    single { OrdersSocketBridge(socket = get(), store = get(), gson = get()) }
 }
 
 
