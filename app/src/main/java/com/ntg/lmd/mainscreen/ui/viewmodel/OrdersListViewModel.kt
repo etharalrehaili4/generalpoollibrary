@@ -1,12 +1,10 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import android.content.Context
-import android.location.Location
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ntg.lmd.mainscreen.domain.usecase.ComputeDistancesUseCase
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
 import kotlinx.coroutines.flow.update
 
@@ -22,7 +20,6 @@ class OrdersListViewModel(
     private val errors = OrdersListErrorHandler(store, helpers)
     private val throttle = OrdersThrottle()
 
-    // orchestrator
     private val deps =
         OrdersListControllerDeps(
             store = store,
@@ -38,14 +35,13 @@ class OrdersListViewModel(
             scope = viewModelScope,
         )
 
-    @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-    fun updateDeviceLocation(location: Location?) {
-        store.deviceLocation.value = location
-        if (location != null &&
+    fun updateDeviceLocation(coords: Coordinates?) {
+        store.deviceLocation.value = coords
+        if (coords != null &&
             store.state.value.orders
                 .isNotEmpty()
         ) {
-            val computed = helpers.withDistances(location, store.state.value.orders)
+            val computed = helpers.withDistances(coords, store.state.value.orders)
             store.state.update { it.copy(orders = computed) }
         }
     }

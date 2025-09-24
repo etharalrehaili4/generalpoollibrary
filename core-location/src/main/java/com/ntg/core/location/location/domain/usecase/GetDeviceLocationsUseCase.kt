@@ -1,7 +1,7 @@
-package com.ntg.lmd.mainscreen.domain.usecase
+package com.ntg.core.location.location.domain.usecase
 
 import android.location.Location
-import com.ntg.lmd.mainscreen.domain.repository.LocationRepository
+import com.ntg.core.location.location.domain.repository.LocationRepository
 
 class GetDeviceLocationsUseCase(
     private val locationRepo: LocationRepository,

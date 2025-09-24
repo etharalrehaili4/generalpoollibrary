@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,26 +26,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.CameraPositionState
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.model.IMapStates
+import com.ntg.core.location.location.domain.model.cameraUpdateZoom
+import com.ntg.core.location.location.screen.component.locationPermissionHandler
+import com.ntg.core.location.location.screen.component.provideMapStates
+import com.ntg.core.location.location.screen.mapScreen
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.model.OrderStatus
 import com.ntg.lmd.mainscreen.ui.components.distanceFilterBar
-import com.ntg.lmd.mainscreen.ui.components.locationPermissionHandler
-import com.ntg.lmd.mainscreen.ui.components.mapCenter
 import com.ntg.lmd.mainscreen.ui.components.poolBottomContent
 import com.ntg.lmd.mainscreen.ui.components.searchResultsDropdown
+import com.ntg.lmd.mainscreen.ui.model.GeneralPoolCallbacks
 import com.ntg.lmd.mainscreen.ui.model.GeneralPoolUiState
-import com.ntg.lmd.mainscreen.ui.model.MapStates
 import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
 import com.ntg.lmd.network.core.RetrofitProvider.userStore
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -59,39 +59,92 @@ fun generalPoolScreen(
 ) {
     val context = LocalContext.current
     val ui by generalPoolViewModel.ui.collectAsStateWithLifecycle()
-    val cameraPositionState = rememberCameraPositionState()
-    val markerState = remember { MarkerState(LatLng(0.0, 0.0)) }
+    val mapStates = provideMapStates()
     val scope = rememberCoroutineScope()
-    val deviceLatLng by generalPoolViewModel.deviceLatLng.collectAsStateWithLifecycle()
+    val deviceCoords by generalPoolViewModel.deviceCoordinates.collectAsStateWithLifecycle()
     val hasCenteredOnDevice = remember { mutableStateOf(false) }
-    setupInitialCamera(ui, deviceLatLng, cameraPositionState, hasCenteredOnDevice)
-    val currentUserId = remember { userStore.getUserId() }
-    LaunchedEffect(Unit) {
-        generalPoolViewModel.setCurrentUserId(currentUserId)
-        generalPoolViewModel.attach()
-    }
-    locationPermissionHandler(
-        onPermissionGranted = { generalPoolViewModel.handleLocationPermission(true) },
-        onPermissionDenied = {
-            generalPoolViewModel.handleLocationPermission(
-                false,
-                promptIfMissing = true,
-            )
-        },
+
+    // Extracted setup
+    setupGeneralPool(
+        viewModel = generalPoolViewModel,
+        deviceCoords = deviceCoords,
+        hasCenteredOnDevice = hasCenteredOnDevice,
+        mapStates = mapStates,
     )
+
+    // Extracted permissions
+    generalPoolPermissions(viewModel = generalPoolViewModel)
+
+    // Extracted search effects
     rememberSearchEffects(navController, generalPoolViewModel)
+
     val focusOnOrder =
-        rememberFocusOnOrder(generalPoolViewModel, markerState, cameraPositionState, scope)
-    val onAddToMe = addToMeAction(context, generalPoolViewModel, currentUserId)
+        rememberFocusOnOrder(
+            viewModel = generalPoolViewModel,
+            mapStates = mapStates,
+            scope = scope,
+        )
+    val onAddToMe = addToMeAction(context, generalPoolViewModel, userStore.getUserId())
+
+    generalPoolLayout(
+        ui = ui,
+        mapStates = mapStates,
+        deviceCoords = deviceCoords,
+        callbacks =
+            GeneralPoolCallbacks(
+                focusOnOrder = focusOnOrder,
+                onAddToMe = onAddToMe,
+                onOrderSelected = generalPoolViewModel.onOrderSelected,
+                onMaxDistanceKm = generalPoolViewModel::onDistanceChange,
+            ),
+    )
+}
+
+@Composable
+private fun setupGeneralPool(
+    viewModel: GeneralPoolViewModel,
+    deviceCoords: Coordinates?,
+    hasCenteredOnDevice: MutableState<Boolean>,
+    mapStates: IMapStates,
+) {
+    val currentUserId = remember { userStore.getUserId() }
+    setupInitialCamera(viewModel.ui.collectAsState().value, deviceCoords, mapStates, hasCenteredOnDevice)
+
+    LaunchedEffect(Unit) {
+        viewModel.setCurrentUserId(currentUserId)
+        viewModel.attach()
+    }
+}
+
+@Composable
+private fun generalPoolPermissions(viewModel: GeneralPoolViewModel) {
+    locationPermissionHandler(
+        onPermissionGranted = { viewModel.handleLocationPermission(true) },
+        onPermissionDenied = { viewModel.handleLocationPermission(false, promptIfMissing = true) },
+    )
+}
+
+@Composable
+private fun generalPoolLayout(
+    ui: GeneralPoolUiState,
+    mapStates: IMapStates,
+    deviceCoords: Coordinates?,
+    callbacks: GeneralPoolCallbacks,
+) {
     Box(Modifier.fillMaxSize()) {
         generalPoolContent(
-            ui,
-            focusOnOrder,
-            generalPoolViewModel::onDistanceChange,
-            MapStates(cameraPositionState, markerState),
-            deviceLatLng,
+            ui = ui,
+            focusOnOrder = callbacks.focusOnOrder,
+            onMaxDistanceKm = callbacks.onMaxDistanceKm,
+            mapStates = mapStates,
+            deviceLatLng = deviceCoords,
         )
-        poolBottomContent(ui, generalPoolViewModel, focusOnOrder, onAddToMe)
+        poolBottomContent(
+            ui = ui,
+            onOrderSelected = callbacks.onOrderSelected,
+            focusOnOrder = callbacks.focusOnOrder,
+            onAddToMe = callbacks.onAddToMe,
+        )
     }
 }
 
@@ -130,32 +183,15 @@ private fun addToMeAction(
 }
 
 @Composable
-private fun setupInitialCamera(
-    ui: GeneralPoolUiState,
-    deviceLatLng: LatLng?,
-    cameraPositionState: CameraPositionState,
-    hasCenteredOnDevice: MutableState<Boolean>,
-) {
-    LaunchedEffect(deviceLatLng, ui.selected) {
-        if (deviceLatLng != null && ui.selected == null && !hasCenteredOnDevice.value) {
-            cameraPositionState.move(
-                CameraUpdateFactory.newLatLngZoom(deviceLatLng, INITIAL_MAP_ZOOM),
-            )
-            hasCenteredOnDevice.value = true
-        }
-    }
-}
-
-@Composable
 private fun generalPoolContent(
     ui: GeneralPoolUiState,
     focusOnOrder: (OrderInfo, Boolean) -> Unit,
     onMaxDistanceKm: (Double) -> Unit,
-    mapStates: MapStates,
-    deviceLatLng: LatLng?,
+    mapStates: IMapStates,
+    deviceLatLng: Coordinates?,
 ) {
     Box(Modifier.fillMaxSize()) {
-        mapCenter(
+        mapScreen(
             ui = ui,
             mapStates = mapStates,
             deviceLatLng = deviceLatLng,
@@ -269,30 +305,40 @@ private fun rememberSearchEffects(
 }
 
 @Composable
+private fun setupInitialCamera(
+    ui: GeneralPoolUiState,
+    deviceCoords: Coordinates?,
+    mapStates: IMapStates,
+    hasCenteredOnDevice: MutableState<Boolean>,
+) {
+    LaunchedEffect(deviceCoords, ui.selectedMarkerId) {
+        if (deviceCoords != null && ui.selectedMarkerId == null && !hasCenteredOnDevice.value) {
+            mapStates.move(cameraUpdateZoom(deviceCoords, INITIAL_MAP_ZOOM))
+            hasCenteredOnDevice.value = true
+        }
+    }
+}
+
+@Composable
 fun rememberFocusOnOrder(
     viewModel: GeneralPoolViewModel,
-    markerState: MarkerState,
-    cameraPositionState: CameraPositionState,
-    scope: kotlinx.coroutines.CoroutineScope,
+    mapStates: IMapStates,
+    scope: CoroutineScope,
     focusZoom: Float = ORDER_FOCUS_ZOOM,
 ): (OrderInfo, Boolean) -> Unit {
     val vm = rememberUpdatedState(viewModel)
-    val marker = rememberUpdatedState(markerState)
-    val camera = rememberUpdatedState(cameraPositionState)
-    val coroutineScope = rememberUpdatedState(scope)
 
     return remember {
         { order: OrderInfo, closeSearch: Boolean ->
             vm.value.onOrderSelected(order)
-            marker.value.position = LatLng(order.lat, order.lng)
-            coroutineScope.value.launch {
-                camera.value.animate(
-                    CameraUpdateFactory.newLatLngZoom(
-                        LatLng(order.lat, order.lng),
-                        focusZoom,
-                    ),
-                )
+
+            val coords = Coordinates(order.lat, order.lng)
+            mapStates.updateMarker(coords)
+
+            scope.launch {
+                mapStates.animate(cameraUpdateZoom(coords, focusZoom))
             }
+
             if (closeSearch) {
                 vm.value.onSearchingChange(false)
                 vm.value.onSearchTextChange("")

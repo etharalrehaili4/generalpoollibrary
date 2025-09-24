@@ -1,4 +1,4 @@
-package com.ntg.lmd.mainscreen.ui.components
+package com.ntg.core.location.location.screen
 
 import android.Manifest
 import android.content.pm.PackageManager
@@ -25,36 +25,29 @@ import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
-import com.ntg.lmd.mainscreen.ui.model.MapStates
-import com.ntg.lmd.mainscreen.ui.model.MapUiState
+import com.ntg.core.location.location.domain.model.Coordinates
+import com.ntg.core.location.location.domain.model.IMapStates
+import com.ntg.core.location.location.domain.model.MapChrome
+import com.ntg.core.location.location.domain.model.MapConfig
+import com.ntg.core.location.location.domain.model.MapMarker
+import com.ntg.core.location.location.domain.model.MapUiState
+import com.ntg.core.location.location.domain.model.asGoogleMapsStates
+import com.ntg.core.location.location.domain.model.toLatLng
 
-// screen height
 private const val TOP_OVERLAY_RATIO = 0.09f // 9% of screen height
 private const val BOTTOM_BAR_RATIO = 0.22f // 22% of screen height
 private const val INITIAL_MAP_ZOOM = 8f
 
-private data class MapChrome(
-    val top: Dp,
-    val bottom: Dp,
-)
-
-private data class MapConfig(
-    val ui: MapUiState,
-    val mapStates: MapStates,
-    val deviceLatLng: LatLng?,
-    val canShowMyLocation: Boolean,
-)
-
 @Composable
-fun mapCenter(
+fun mapScreen(
     ui: MapUiState,
-    mapStates: MapStates,
-    deviceLatLng: LatLng?,
+    mapStates: IMapStates,
+    deviceLatLng: Coordinates?,
     modifier: Modifier = Modifier,
     bottomOverlayPadding: Dp? = null,
 ) {
-    val (cameraPositionState, _) = mapStates
+    val (cameraPositionState, _) = mapStates.asGoogleMapsStates()
+
     val (topDefault, bottomDefault) = overlayHeights()
     val chrome =
         remember(topDefault, bottomDefault, bottomOverlayPadding) {
@@ -73,18 +66,16 @@ fun mapCenter(
     googleMapContent(config = config, chrome = chrome, modifier = modifier)
 }
 
-// ---------- helpers (all ≤5 params) ----------
-
 @Composable
 private fun initialCenterEffect(
-    deviceLatLng: LatLng?,
+    deviceLatLng: Coordinates?,
     camera: CameraPositionState,
     alreadyCentered: Boolean,
     setCentered: (Boolean) -> Unit,
 ) {
     LaunchedEffect(deviceLatLng, alreadyCentered) {
         if (deviceLatLng != null && !alreadyCentered) {
-            camera.animate(CameraUpdateFactory.newLatLngZoom(deviceLatLng, INITIAL_MAP_ZOOM))
+            camera.animate(CameraUpdateFactory.newLatLngZoom(deviceLatLng.toLatLng(), INITIAL_MAP_ZOOM))
             setCentered(true)
         }
     }
@@ -96,25 +87,35 @@ private fun googleMapContent(
     chrome: MapChrome,
     modifier: Modifier = Modifier,
 ) {
-    val (cameraPositionState, markerState) = config.mapStates
+    val (cameraPositionState, markerState) = config.mapStates.asGoogleMapsStates()
+
     GoogleMap(
         modifier = modifier,
         cameraPositionState = cameraPositionState,
         properties = MapProperties(isMyLocationEnabled = config.canShowMyLocation),
-        uiSettings = MapUiSettings(zoomControlsEnabled = true, myLocationButtonEnabled = true),
+        uiSettings = MapUiSettings(
+            zoomControlsEnabled = true,
+            myLocationButtonEnabled = true
+        ),
         contentPadding = PaddingValues(top = chrome.top, bottom = chrome.bottom),
     ) {
         distanceCircle(
-            deviceLatLng = config.deviceLatLng,
+            deviceLatLng = config.deviceCoords,
             distanceKm = config.ui.distanceThresholdKm,
         )
+
         otherMarkers(
-            orders = config.ui.mapOrders,
-            selectedOrderNumber = config.ui.selected?.orderNumber,
+            markers = config.ui.markers,
+            selectedMarkerId = config.ui.selectedMarkerId,
         )
-        selectedMarkerPositionEffect(selected = config.ui.selected, markerState = markerState)
+
+        selectedMarkerPositionEffect(
+            selected = config.ui.markers.find { it.id == config.ui.selectedMarkerId },
+            markerState = markerState,
+        )
+
         selectedMarker(
-            selected = config.ui.selected,
+            selected = config.ui.markers.find { it.id == config.ui.selectedMarkerId },
             hasLocationPerm = config.ui.hasLocationPerm,
             thresholdKm = config.ui.distanceThresholdKm,
             markerState = markerState,
@@ -148,12 +149,12 @@ private fun rememberCanShowMyLocation(): Boolean {
 
 @Composable
 private fun distanceCircle(
-    deviceLatLng: LatLng?,
+    deviceLatLng: Coordinates?,
     distanceKm: Double,
 ) {
     if (deviceLatLng != null && distanceKm > 0.0) {
         Circle(
-            center = deviceLatLng,
+            center = deviceLatLng.toLatLng(),
             radius = distanceKm * 1000.0,
             strokeWidth = 3f,
             strokeColor = MaterialTheme.colorScheme.primary,
@@ -165,16 +166,16 @@ private fun distanceCircle(
 
 @Composable
 private fun otherMarkers(
-    orders: List<OrderInfo>,
-    selectedOrderNumber: String?,
+    markers:List<MapMarker>,
+    selectedMarkerId: String?,
 ) {
-    orders.forEach { order ->
-        if (order.orderNumber != selectedOrderNumber) {
-            val position = remember(order.lat, order.lng) { LatLng(order.lat, order.lng) }
+    markers.forEach { marker ->
+        if (marker.id != selectedMarkerId) {
+            val position = remember(marker.coordinates.latitude, marker.coordinates.longitude) { LatLng(marker.coordinates.latitude, marker.coordinates.longitude) }
             Marker(
                 state = remember { MarkerState(position) },
-                title = order.name,
-                snippet = order.orderNumber,
+                title = marker.title,
+                snippet = marker.snippet,
                 zIndex = 0f,
             )
         }
@@ -183,17 +184,17 @@ private fun otherMarkers(
 
 @Composable
 private fun selectedMarkerPositionEffect(
-    selected: OrderInfo?,
+    selected: MapMarker?,
     markerState: MarkerState,
 ) {
-    LaunchedEffect(selected?.lat, selected?.lng) {
-        selected?.let { markerState.position = LatLng(it.lat, it.lng) }
+    LaunchedEffect(selected?.coordinates?.latitude, selected?.coordinates?.longitude) {
+        selected?.let { markerState.position = LatLng(it.coordinates.latitude, it.coordinates.longitude) }
     }
 }
 
 @Composable
 private fun selectedMarker(
-    selected: OrderInfo?,
+    selected: MapMarker?,
     hasLocationPerm: Boolean,
     thresholdKm: Double,
     markerState: MarkerState,
@@ -205,9 +206,10 @@ private fun selectedMarker(
     if (withinRange) {
         Marker(
             state = markerState,
-            title = selected.name,
-            snippet = selected.orderNumber,
+            title = selected.title,
+            snippet = selected.snippet,
             zIndex = 1f,
         )
     }
 }
+

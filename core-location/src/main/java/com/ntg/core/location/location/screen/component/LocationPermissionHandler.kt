@@ -1,12 +1,14 @@
-package com.ntg.lmd.mainscreen.ui.components
+package com.ntg.core.location.location.screen.component
 
 import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 
 @Composable
 fun locationPermissionHandler(
@@ -20,7 +22,7 @@ fun locationPermissionHandler(
         rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             val granted =
                 result[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                    result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+                        result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
             if (granted) {
                 onPermissionGranted(context)
             } else {
@@ -30,10 +32,10 @@ fun locationPermissionHandler(
 
     LaunchedEffect(Unit) {
         val granted =
-            androidx.core.content.ContextCompat.checkSelfPermission(
+            ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION,
-            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            ) == PackageManager.PERMISSION_GRANTED
         if (granted) {
             onPermissionGranted(context)
         } else if (requestOnLaunch) {
