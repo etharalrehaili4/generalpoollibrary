@@ -22,6 +22,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "lmd"
 include(":app")
-include(":core-location")
+//include(":core-location")
 
-include(":verticalList")
+//include(":verticalList")

@@ -9,7 +9,7 @@ android {
     compileSdk = 36
 
     buildFeatures {
-        compose = true // 👈 important
+        compose = true
     }
 
     defaultConfig {

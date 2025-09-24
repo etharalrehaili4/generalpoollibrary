@@ -189,12 +189,11 @@ dependencies {
     implementation(libs.koin.androidx.compose)
 
     // vertical list library
-    implementation(project(":verticalList"))
+    implementation("com.github.etharalrehaili4:verticallist:834045a12a")
 
-
-    implementation(project(":core-location"))
+    //location lib
+    implementation("com.github.R-0515:core-location:-SNAPSHOT")
 }
-
 // Custom tasks for code quality checks
 tasks.register("checkUnusedAssets") {
     group = "verification"
