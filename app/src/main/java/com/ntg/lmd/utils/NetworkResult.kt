@@ -1,4 +1,4 @@
-package com.ntg.lmd.network.queue
+package com.ntg.lmd.utils
 
 sealed class NetworkResult<out T> {
     data object Loading : NetworkResult<Nothing>()

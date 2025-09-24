@@ -7,7 +7,7 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.ntg.lmd.R
 import com.ntg.lmd.authentication.domain.usecase.LoginUseCase
 import com.ntg.lmd.authentication.ui.model.LoginUiState
-import com.ntg.lmd.network.queue.NetworkResult
+import com.ntg.lmd.utils.NetworkResult
 import com.ntg.lmd.utils.ValidationField
 import com.ntg.lmd.utils.ValidationViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
