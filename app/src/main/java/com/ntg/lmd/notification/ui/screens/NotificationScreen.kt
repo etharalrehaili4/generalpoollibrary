@@ -48,6 +48,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.verticallist.PagingState
+import com.example.verticallist.defaultVerticalListConfig
+import com.example.verticallist.verticalListComponent
 import com.ntg.lmd.R
 import com.ntg.lmd.notification.data.model.FCMServiceLocator
 import com.ntg.lmd.notification.data.repository.seedNotifications
@@ -57,9 +60,6 @@ import com.ntg.lmd.notification.ui.model.NotificationUi
 import com.ntg.lmd.notification.ui.model.relativeAgeLabel
 import com.ntg.lmd.notification.ui.viewmodel.NotificationsVMFactory
 import com.ntg.lmd.notification.ui.viewmodel.NotificationsViewModel
-import com.ntg.lmd.order.domain.model.PagingState
-import com.ntg.lmd.order.domain.model.defaultVerticalListConfig
-import com.ntg.lmd.order.ui.components.verticalListComponent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch

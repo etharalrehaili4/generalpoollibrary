@@ -6,16 +6,18 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ntg.lmd.R
-import com.ntg.lmd.network.core.RetrofitProvider.userStore
 import com.ntg.lmd.notification.data.model.FCMServiceLocator
 import com.ntg.lmd.notification.domain.model.AgentNotification
+import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 import com.ntg.lmd.notification.data.model.NotificationPayload as Payload
+import org.koin.android.ext.android.inject
 
 class FcmService : FirebaseMessagingService() {
+    private val userStore: SecureUserStore by inject()
     private fun isLoggedIn(): Boolean = userStore.getUserId()?.isNotBlank() == true
 
     companion object {

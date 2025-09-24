@@ -22,16 +22,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.ntg.core.location.location.domain.repository.LocationProvider
+import com.ntg.core.location.location.screen.component.initialCameraPositionEffect
+import com.ntg.core.location.location.screen.component.locationPermissionHandler
+import com.ntg.core.location.location.screen.component.provideMapStates
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.domain.model.OrderStatus
+import com.ntg.lmd.mainscreen.domain.model.toMapMarker
 import com.ntg.lmd.mainscreen.ui.components.OrdersContentCallbacks
 import com.ntg.lmd.mainscreen.ui.components.OrdersContentDeps
 import com.ntg.lmd.mainscreen.ui.components.bottomStickyButton
-import com.ntg.lmd.mainscreen.ui.components.initialCameraPositionEffect
-import com.ntg.lmd.mainscreen.ui.components.locationPermissionHandler
 import com.ntg.lmd.mainscreen.ui.components.ordersContent
 import com.ntg.lmd.mainscreen.ui.components.ordersEffects
 import com.ntg.lmd.mainscreen.ui.components.reassignBottomSheet
+import com.ntg.lmd.mainscreen.ui.model.MyOrdersPoolUiState
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState
 import com.ntg.lmd.mainscreen.ui.viewmodel.ActiveAgentsViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.AgentsState
@@ -39,11 +43,13 @@ import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel.OrderLogger
-import com.ntg.lmd.network.core.RetrofitProvider.userStore
+import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -190,27 +196,36 @@ private fun wireMyOrders(deps: WireDeps) {
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @Composable
-private fun myOrdersLocationSection(
+fun myOrdersLocationSection(
     deps: WireDeps,
-    poolUi: com.ntg.lmd.mainscreen.ui.model.MyOrdersPoolUiState,
+    poolUi: MyOrdersPoolUiState,
 ) {
+    val locationProvider: LocationProvider = get() // from Koin
+    val context = LocalContext.current
+
     locationPermissionHandler(
-        onPermissionGranted = { ctx ->
-            val fused =
-                com.google.android.gms.location.LocationServices
-                    .getFusedLocationProviderClient(ctx)
-            fused.lastLocation.addOnSuccessListener { loc ->
-                deps.poolVm.updateDeviceLocation(loc)
+        onPermissionGranted = {
+            locationProvider.getLastKnownLocation(context) { coords ->
+                coords?.let { deps.poolVm.updateDeviceLocation(it) }
             }
         },
     )
-    val mapStates = rememberMapStates()
-    initialCameraPositionEffect(poolUi.orders, poolUi.selectedOrderNumber, mapStates)
+
+    val markers = poolUi.orders.map { it.toMapMarker() }
+    val mapStates = provideMapStates()
+
+    initialCameraPositionEffect(
+        markers = markers,
+        selectedMarkerId = poolUi.selectedOrderNumber,
+        mapStates = mapStates,
+    )
+
     forwardMyPoolLocationToMyOrders(deps.poolVm, deps.ordersVm)
 }
 
 @Composable
 private fun myOrdersUserSection(deps: WireDeps) {
+    val userStore: SecureUserStore = koinInject()
     val currentUserId: String? = remember { userStore.getUserId() }
     LaunchedEffect(currentUserId) {
         deps.ordersVm.listVM.setCurrentUserId(currentUserId)
