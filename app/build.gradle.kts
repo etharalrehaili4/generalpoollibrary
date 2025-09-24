@@ -187,6 +187,11 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+
+    // vertical list library
+    implementation(project(":verticalList"))
+
+
     implementation(project(":core-location"))
 }
 

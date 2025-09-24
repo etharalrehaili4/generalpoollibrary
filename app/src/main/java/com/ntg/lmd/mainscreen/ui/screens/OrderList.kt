@@ -12,15 +12,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.verticallist.PagingState
+import com.example.verticallist.defaultVerticalListConfig
+import com.example.verticallist.verticalListComponent
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.model.OrderStatus
 import com.ntg.lmd.mainscreen.ui.components.OrderActions
 import com.ntg.lmd.mainscreen.ui.components.myOrderCard
 import com.ntg.lmd.mainscreen.ui.model.MyOrderCardCallbacks
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
-import com.ntg.lmd.order.domain.model.PagingState
-import com.ntg.lmd.order.domain.model.defaultVerticalListConfig
-import com.ntg.lmd.order.ui.components.verticalListComponent
 
 data class OrderListState(
     val orders: List<OrderInfo>,
