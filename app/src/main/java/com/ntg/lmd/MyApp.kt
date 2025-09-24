@@ -62,6 +62,7 @@ class MyApp : Application() {
                     socketModule,
                     monitorModule,
                     settingsModule,
+                    locationModule,
                     MyOrderMyPoolModule,
                     ordersHistoryModule,
                     deliveriesLogModule,
@@ -70,5 +71,5 @@ class MyApp : Application() {
             )
         }
     }
-    }
+}
 

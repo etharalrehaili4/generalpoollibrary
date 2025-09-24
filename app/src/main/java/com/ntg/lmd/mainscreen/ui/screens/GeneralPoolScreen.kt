@@ -43,10 +43,10 @@ import com.ntg.lmd.mainscreen.ui.model.GeneralPoolCallbacks
 import com.ntg.lmd.mainscreen.ui.model.GeneralPoolUiState
 import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
+import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
-import com.ntg.lmd.utils.SecureUserStore
 import org.koin.compose.koinInject
 
 // Map / Camera behavior
@@ -64,9 +64,7 @@ fun generalPoolScreen(
     val scope = rememberCoroutineScope()
     val deviceCoords by generalPoolViewModel.deviceCoordinates.collectAsStateWithLifecycle()
     val hasCenteredOnDevice = remember { mutableStateOf(false) }
-    setupInitialCamera(ui, deviceLatLng, cameraPositionState, hasCenteredOnDevice)
     val userStore: SecureUserStore = koinInject()
-
     // Extracted setup
     setupGeneralPool(
         viewModel = generalPoolViewModel,
@@ -110,6 +108,7 @@ private fun setupGeneralPool(
     hasCenteredOnDevice: MutableState<Boolean>,
     mapStates: IMapStates,
 ) {
+    val userStore: SecureUserStore = koinInject()
     val currentUserId = remember { userStore.getUserId() }
     setupInitialCamera(viewModel.ui.collectAsState().value, deviceCoords, mapStates, hasCenteredOnDevice)
 

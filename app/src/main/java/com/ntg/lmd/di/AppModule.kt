@@ -88,7 +88,6 @@ val networkModule = module {
 
 val socketModule = module {
     single { Gson() }
-    single<TokenStore> { SecureTokenStore(androidContext()) }
     single { OrderStore() }
     single<ChangeHandler> { OrdersChangeHandler(gson = get(), store = get()) }
 
@@ -169,23 +168,29 @@ val deliveriesLogModule = module {
 }
 
 val generalPoolModule = module {
-    single<LocationRepository> { LocationRepositoryImpl(get()) }
+
+    // Use cases & deps
+    factory { GetDeviceLocationsUseCase(get<LocationRepository>()) }
+    factory { ComputeDistancesUseCase() }
+
+    // Repository (requires API and the socket bridge)
     single<LiveOrdersRepository> { LiveOrdersRepositoryImpl(get(), get<OrdersSocketBridge>()) }
 
+    // Use cases using the repo
     factory { LoadOrdersUseCase(get<LiveOrdersRepository>()) }
     factory { OrdersRealtimeUseCase(get<LiveOrdersRepository>()) }
-    factory { ComputeDistancesUseCase() }
-    factory { GetDeviceLocationsUseCase(get<LocationRepository>()) }
 
+    // ViewModel
     viewModel {
         GeneralPoolViewModel(
-            ordersRealtime = get(),
-            computeDistances = get(),
+            ordersRealtime    = get(),
+            computeDistances  = get(),
             getDeviceLocations = get(),
             loadOrdersUseCase = get(),
         )
     }
 
+    // API
     single<LiveOrdersApiService> { RetrofitFactory.createAuthed(LiveOrdersApiService::class.java) }
 }
 
