@@ -2,8 +2,8 @@ package com.ntg.lmd.authentication.domain.usecase
 
 import com.ntg.lmd.authentication.data.datasource.model.User
 import com.ntg.lmd.authentication.domain.repository.AuthRepository
-import com.ntg.lmd.network.queue.NetworkError
-import com.ntg.lmd.network.queue.NetworkResult
+import com.ntg.lmd.utils.NetworkError
+import com.ntg.lmd.utils.NetworkResult
 
 class LoginUseCase(
     private val authRepository: AuthRepository,

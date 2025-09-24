@@ -3,6 +3,7 @@ package com.ntg.lmd.di
 import com.ntg.core.location.location.domain.repository.LocationRepository
 import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.core.location.location.domain.usecase.GetDeviceLocationsUseCase
+import com.google.gson.Gson
 import com.ntg.lmd.BuildConfig
 import com.ntg.lmd.authentication.data.datasource.remote.api.AuthApi
 import com.ntg.lmd.authentication.data.repositoryImp.AuthRepositoryImp
@@ -16,6 +17,9 @@ import com.ntg.lmd.mainscreen.data.datasource.remote.UpdatetOrdersStatusApi
 import com.ntg.lmd.mainscreen.data.repository.DeliveriesLogRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.LiveOrdersRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.MyOrdersRepositoryImpl
+import com.ntg.lmd.mainscreen.data.repository.OrderStore
+import com.ntg.lmd.mainscreen.data.repository.OrdersChangeHandler
+import com.ntg.lmd.mainscreen.data.repository.OrdersSocketBridge
 import com.ntg.lmd.mainscreen.data.repository.UpdateOrdersStatusRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.UsersRepositoryImpl
 import com.ntg.lmd.mainscreen.domain.repository.DeliveriesLogRepository
@@ -35,11 +39,6 @@ import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
-import com.ntg.lmd.network.authheader.AuthInterceptor
-import com.ntg.lmd.network.authheader.SecureTokenStore
-import com.ntg.lmd.network.connectivity.NetworkMonitor
-import com.ntg.lmd.network.core.RetrofitProvider
-import com.ntg.lmd.network.sockets.SocketIntegration
 import com.ntg.lmd.order.data.remote.OrdersHistoryApi
 import com.ntg.lmd.order.data.remote.repository.OrdersRepositoryImpl
 import com.ntg.lmd.order.domain.model.repository.OrdersRepository
@@ -49,126 +48,75 @@ import com.ntg.lmd.settings.data.SettingsPreferenceDataSource
 import com.ntg.lmd.settings.ui.viewmodel.SettingsViewModel
 import com.ntg.lmd.utils.LogoutManager
 import com.ntg.lmd.utils.SecureUserStore
-import okhttp3.OkHttpClient
+import com.ntg.network.authheader.SecureTokenStore
+import com.ntg.network.authheader.TokenStore
+import com.ntg.network.connectivity.NetworkMonitor
+import com.ntg.network.core.RetrofitFactory
+import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import com.ntg.network.sockets.SocketIntegration
+import com.ntg.network.sockets.ChangeHandler
 
-val ordersHistoryModule =
-    module {
-        single<OrdersHistoryApi> { get<Retrofit>().create(OrdersHistoryApi::class.java) }
-        single<OrdersRepository> { OrdersRepositoryImpl(get()) }
-        factory { GetOrdersUseCase(get()) }
-        viewModel { OrderHistoryViewModel(get()) }
-    }
-val deliveriesLogModule =
-    module {
-        single<OrdersApi> { get<Retrofit>().create(OrdersApi::class.java) }
-        single<DeliveriesLogRepository> { DeliveriesLogRepositoryImpl(get()) }
-        factory { GetDeliveriesLogFromApiUseCase(get()) }
-        viewModel { DeliveriesLogViewModel(get()) }
-    }
+val authModule = module {
+    // SecureUserStore
+    single { SecureUserStore(get()) }
 
-val authModule =
-    module {
-        // SecureUserStore
-        single { SecureUserStore(get()) }
+    single<AuthApi> { RetrofitFactory.createNoAuth(AuthApi::class.java) }
 
-        single {
-            AuthInterceptor(
-                store = get(),
-                supabaseKey = BuildConfig.SUPABASE_KEY,
-            )
-        }
-
-        single {
-            OkHttpClient
-                .Builder()
-                .addInterceptor(get<AuthInterceptor>())
-                .build()
-        }
-
-        single {
-            Retrofit
-                .Builder()
-                .baseUrl(BuildConfig.BASE_URL)
-                .client(get<OkHttpClient>())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-        }
-
-        // AuthApi (Retrofit no auth)
-        single<AuthApi> { get<Retrofit>().create(AuthApi::class.java) }
-
-        // Repository
-        single<AuthRepository> {
-            AuthRepositoryImp(
-                loginApi = get(),
-                store = get(), // SecureTokenStore
-                userStore = get(), // SecureUserStore
-            )
-        }
-
-        // UseCase
-        factory { LoginUseCase(get()) }
-
-        // ViewModel
-        viewModel { LoginViewModel(loginUseCase = get()) }
+    // Repository
+    single<AuthRepository> {
+        AuthRepositoryImp(
+            loginApi = get(),    // AuthApi
+            store = get(),       // SecureTokenStore
+            userStore = get()
+        )
     }
 
-val networkModule =
-    module {
+    // UseCase + VM
+    factory { LoginUseCase(get()) }
+    viewModel { LoginViewModel(loginUseCase = get()) }
+}
 
-        // SecureTokenStore (only here)
-        single { SecureTokenStore(get()) }
 
-        single<OrdersApi> { get<Retrofit>().create(OrdersApi::class.java) }
+val networkModule = module {
+    factory<OrdersApi> { RetrofitFactory.createAuthed(OrdersApi::class.java) }
+    factory<UpdatetOrdersStatusApi> { RetrofitFactory.createAuthed(UpdatetOrdersStatusApi::class.java) }
+    factory<GetUsersApi> { RetrofitFactory.createAuthed(GetUsersApi::class.java) }
+}
 
-        single<UpdatetOrdersStatusApi> { get<Retrofit>().create(UpdatetOrdersStatusApi::class.java) }
 
-        single<GetUsersApi> { get<Retrofit>().create(GetUsersApi::class.java) }
-    }
+val socketModule = module {
+    single { Gson() }
+    single { OrderStore() }
+    single<ChangeHandler> { OrdersChangeHandler(gson = get(), store = get()) }
 
-val socketModule =
-    module {
-        single {
-            SocketIntegration(
-                baseWsUrl = BuildConfig.WS_BASE_URL,
-                client = RetrofitProvider.okHttpForWs,
-                tokenStore = get<SecureTokenStore>(),
-            ).apply {
-                get<SecureTokenStore>().onTokensChanged = { access, _ ->
-                    reconnectIfTokenChanged(access)
-                }
+    single {
+        SocketIntegration(
+            baseWsUrl = BuildConfig.WS_BASE_URL,
+            tokenStore = get<TokenStore>(),
+            handler = get<ChangeHandler>(),
+            enableLogging = true
+        ).apply {
+            (get<TokenStore>() as? SecureTokenStore)?.onTokensChanged = { access, _ ->
+                reconnectIfTokenChanged(access)
             }
         }
     }
+
+    single { OrdersSocketBridge(socket = get(), store = get(), gson = get()) }
+}
+
 
 val monitorModule =
     module {
         single { NetworkMonitor(get()) }
     }
 
-val settingsModule =
-    module {
-        single { SettingsPreferenceDataSource(get()) }
-
-        single {
-            LogoutManager(
-                tokenStore = get<SecureTokenStore>(),
-                socket = get<SocketIntegration>(),
-            )
-        }
-
-        viewModel {
-            SettingsViewModel(
-                prefs = get(),
-                logoutManager = get(),
-            )
-        }
-    }
-
+val securityModule = module {
+    single { SecureTokenStore(androidContext()) }
+    single<TokenStore> { get<SecureTokenStore>() }
+}
 val MyOrderMyPoolModule =
     module {
         // Repos
@@ -205,27 +153,57 @@ val MyOrderMyPoolModule =
         viewModel { ActiveAgentsViewModel(get()) }
     }
 
-val generalPoolModule =
-    module {
-        // repository
-        single<LiveOrdersRepository> { LiveOrdersRepositoryImpl(get(), get<SocketIntegration>()) }
+val ordersHistoryModule = module {
+    single<OrdersHistoryApi> { RetrofitFactory.createAuthed(OrdersHistoryApi::class.java) }
+    single<OrdersRepository> { OrdersRepositoryImpl(get()) }
+    factory { GetOrdersUseCase(get()) }
+    viewModel { OrderHistoryViewModel(get()) }
+}
 
-        // Use cases
-        factory { LoadOrdersUseCase(get<LiveOrdersRepository>()) }
-        factory { OrdersRealtimeUseCase(get<LiveOrdersRepository>()) }
-        factory { ComputeDistancesUseCase() }
-        factory { GetDeviceLocationsUseCase(get<LocationRepository>()) }
+val deliveriesLogModule = module {
+    single<OrdersApi> { RetrofitFactory.createAuthed(OrdersApi::class.java) }
+    single<DeliveriesLogRepository> { DeliveriesLogRepositoryImpl(get()) }
+    factory { GetDeliveriesLogFromApiUseCase(get()) }
+    viewModel { DeliveriesLogViewModel(get()) }
+}
 
-        // view model
-        viewModel {
-            GeneralPoolViewModel(
-                ordersRealtime = get(),
-                computeDistances = get(),
-                getDeviceLocations = get(),
-                loadOrdersUseCase = get(),
-            )
-        }
+val generalPoolModule = module {
 
-        // Api
-        single<LiveOrdersApiService> { RetrofitProvider.liveOrderApi }
+    // Use cases & deps
+    factory { GetDeviceLocationsUseCase(get<LocationRepository>()) }
+    factory { ComputeDistancesUseCase() }
+
+    // Repository (requires API and the socket bridge)
+    single<LiveOrdersRepository> { LiveOrdersRepositoryImpl(get(), get<OrdersSocketBridge>()) }
+
+    // Use cases using the repo
+    factory { LoadOrdersUseCase(get<LiveOrdersRepository>()) }
+    factory { OrdersRealtimeUseCase(get<LiveOrdersRepository>()) }
+
+    // ViewModel
+    viewModel {
+        GeneralPoolViewModel(
+            ordersRealtime    = get(),
+            computeDistances  = get(),
+            getDeviceLocations = get(),
+            loadOrdersUseCase = get(),
+        )
     }
+
+    // API
+    single<LiveOrdersApiService> { RetrofitFactory.createAuthed(LiveOrdersApiService::class.java) }
+}
+
+val settingsModule = module {
+    single { SettingsPreferenceDataSource(get()) }
+
+    single {
+        LogoutManager(
+            tokenStore = get<SecureTokenStore>(),
+            userStore  = get<SecureUserStore>(),
+            socket     = get<SocketIntegration>()
+        )
+    }
+
+    viewModel { SettingsViewModel(prefs = get(), logoutManager = get()) }
+}

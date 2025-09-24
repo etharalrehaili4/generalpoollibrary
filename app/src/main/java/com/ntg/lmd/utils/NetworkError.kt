@@ -1,4 +1,8 @@
-package com.ntg.lmd.network.queue
+package com.ntg.lmd.utils
+
+import java.net.ConnectException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 sealed class NetworkError(
     val message: String,
@@ -35,9 +39,9 @@ sealed class NetworkError(
 
         fun fromException(e: Throwable): NetworkError =
             when (e) {
-                is java.net.SocketTimeoutException -> Timeout()
-                is java.net.UnknownHostException,
-                is java.net.ConnectException,
+                is SocketTimeoutException -> Timeout()
+                is UnknownHostException,
+                is ConnectException,
                 -> Network(cause = e)
                 else -> Unknown(e.message ?: "Unexpected exception", e)
             }

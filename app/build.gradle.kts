@@ -187,6 +187,7 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation("com.github.Raghad-almehmadi:network_library:3")
 
     // vertical list library
     implementation("com.github.etharalrehaili4:verticallist:834045a12a")
