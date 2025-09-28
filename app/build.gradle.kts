@@ -187,19 +187,20 @@ dependencies {
     // Koin
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
+    implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
+
     implementation("com.github.Raghad-almehmadi:network_library:3")
 
     // vertical list library
     implementation("com.github.etharalrehaili4:verticallist:834045a12a")
 
-    // location lib
+    //location lib
     implementation("com.github.R-0515:core-location:-SNAPSHOT")
 
     implementation(project(":generalpool"))
     implementation("com.google.maps.android:maps-compose:6.1.0")
     implementation("com.google.android.gms:play-services-maps:19.0.0")
 }
-
 // Custom tasks for code quality checks
 tasks.register("checkUnusedAssets") {
     group = "verification"

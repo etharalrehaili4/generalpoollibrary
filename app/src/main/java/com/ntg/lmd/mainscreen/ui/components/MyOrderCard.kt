@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -26,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.model.OrderStatus
@@ -47,23 +49,34 @@ fun myOrderCard(
     var showReassign by remember { mutableStateOf(false) }
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .width(dimensionResource(R.dimen.myOrders_card_width))
+            .height(260.dp),
         shape = RoundedCornerShape(dimensionResource(R.dimen.card_radius)),
         elevation = CardDefaults.cardElevation(defaultElevation = CARD_ELEVATION),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
     ) {
-        Column(Modifier.padding(dimensionResource(R.dimen.largeSpace))) {
-            myOrderCardHeader(order, isUpdating, callbacks.onReassignRequested, updateVm)
-            Spacer(Modifier.height(dimensionResource(R.dimen.mediumSpace)))
-            myOrderCardPrimaryRow(order.status, isUpdating, callbacks.onDetails) { dialog = it }
-            Spacer(Modifier.height(dimensionResource(R.dimen.smallerSpace)))
-            myOrderCardFailIfNeeded(order.status, isUpdating) { dialog = OrderActions.Fail }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(dimensionResource(R.dimen.mediumSpace)),
+            verticalArrangement = Arrangement.SpaceBetween // 🔹 Pushes button down
+        ) {
+            Column {
+                myOrderCardHeader(order, isUpdating, callbacks.onReassignRequested, updateVm)
+                Spacer(Modifier.height(dimensionResource(R.dimen.mediumSpace)))
+                myOrderCardPrimaryRow(order.status, isUpdating, callbacks.onDetails) { dialog = it }
+                Spacer(Modifier.height(dimensionResource(R.dimen.smallerSpace)))
+                myOrderCardFailIfNeeded(order.status, isUpdating) { dialog = OrderActions.Fail }
+            }
+
+            //  Always visible at bottom
             callButton(callbacks.onCall)
         }
     }
 
+    // dialogs
     myOrderCardReassignDialog(show = showReassign, onClose = { showReassign = false })
-
     myOrderCardDialogsHost(
         dialog = dialog,
         onDismiss = { dialog = null },
@@ -73,6 +86,8 @@ fun myOrderCard(
         },
     )
 }
+
+
 
 @Composable
 private fun myOrderCardHeader(

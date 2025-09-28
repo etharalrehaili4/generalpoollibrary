@@ -10,9 +10,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ntg.horizontallist.GeneralHorizontalList
+import com.ntg.horizontallist.GeneralHorizontalListCallbacks
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.ui.model.GeneralPoolUiState
+import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
+
 
 @Composable
 fun poolBottomContent(
@@ -56,11 +60,12 @@ fun ordersHorizontalList(
 ) {
     Box(Modifier.fillMaxSize()) {
         Box(Modifier.align(Alignment.BottomCenter)) {
-            generalHorizontalList(
-                orders = ui.filteredOrdersInRange,
+            GeneralHorizontalList(
+                items = ui.filteredOrdersInRange,
+                key = { it.orderNumber },
                 callbacks =
-                    HorizontalListCallbacks(
-                        onCenteredOrderChange = { order, _ ->
+                    GeneralHorizontalListCallbacks(
+                        onCenteredItemChange = { order, _ ->
                             focusOnOrder(order, false)
                             onOrderSelected(order)
                         },
@@ -76,3 +81,4 @@ fun ordersHorizontalList(
         }
     }
 }
+
