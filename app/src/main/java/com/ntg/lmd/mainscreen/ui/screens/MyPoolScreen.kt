@@ -33,10 +33,10 @@ import com.ntg.core.location.location.screen.component.locationPermissionHandler
 import com.ntg.core.location.location.screen.component.provideMapStates
 import com.ntg.core.location.location.screen.component.rememberFocusOnMarker
 import com.ntg.core.location.location.screen.mapScreen
+import com.ntg.horizontallist.GeneralHorizontalList
+import com.ntg.horizontallist.GeneralHorizontalListCallbacks
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
-import com.ntg.lmd.mainscreen.ui.components.HorizontalListCallbacks
-import com.ntg.lmd.mainscreen.ui.components.generalHorizontalList
 import com.ntg.lmd.mainscreen.ui.components.myPoolOrderCardItem
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersPoolUiState
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
@@ -220,21 +220,22 @@ private fun ordersHorizontalList(
     state: MapOverlayState,
     callbacks: MapOverlayCallbacks,
 ) {
-    generalHorizontalList(
-        orders = state.orders,
-        callbacks =
-            HorizontalListCallbacks(
-                onCenteredOrderChange = { order, index ->
-                    callbacks.onCenteredOrderChange(order, index)
-                },
-                onNearEnd = { idx -> callbacks.onNearEnd(idx) },
-            ),
-        cardContent = { order, _ ->
-            myPoolOrderCardItem(
-                order = order,
-                onOpenOrderDetails = callbacks.onOpenOrderDetails,
-                onCall = { },
-            )
-        },
-    )
+    GeneralHorizontalList(
+        items = state.orders,
+        key = { it.orderNumber }, // use a unique field from OrderInfo
+        callbacks = GeneralHorizontalListCallbacks(
+            onCenteredItemChange = { order, index ->
+                callbacks.onCenteredOrderChange(order, index)
+            },
+            onNearEnd = { idx ->
+                callbacks.onNearEnd(idx)
+            }
+        )
+    ) { order, _ ->
+        myPoolOrderCardItem(
+            order = order,
+            onOpenOrderDetails = callbacks.onOpenOrderDetails,
+            onCall = { },
+        )
+    }
 }
