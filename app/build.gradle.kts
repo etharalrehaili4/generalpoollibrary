@@ -196,7 +196,7 @@ dependencies {
 
     //location lib
     implementation("com.github.R-0515:core-location:-SNAPSHOT")
-    implementation(project(":orderhistorydelivery"))
+    implementation(project(":myorderhistoryanddelivery"))
 }
 // Custom tasks for code quality checks
 tasks.register("checkUnusedAssets") {
