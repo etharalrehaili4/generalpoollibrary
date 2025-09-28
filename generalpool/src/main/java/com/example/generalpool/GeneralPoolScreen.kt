@@ -17,23 +17,35 @@ import com.example.generalpool.models.GeneralPoolUiState
 import com.example.generalpool.models.MapHost
 import com.example.generalpool.models.OrderInfo
 
+// --- Holders to keep the Composable API ≤ 5 params ---
+data class GeneralPoolEnvironment(
+    val deviceCoords: Coordinates?
+)
+
+data class GeneralPoolCallbacks(
+    val onFocusOnOrder: (OrderInfo, closeSearch: Boolean) -> Unit,
+    val onDistanceChange: (Double) -> Unit,
+    val onOrderSelected: (OrderInfo?) -> Unit,
+    val onAddToMe: (OrderInfo) -> Unit,
+)
+
+data class GeneralPoolSlots(
+    val distanceFilterBar: @Composable (maxDistanceKm: Double, onChange: (Double) -> Unit) -> Unit,
+    val searchDropdown: @Composable (visible: Boolean, orders: List<OrderInfo>, onPick: (OrderInfo) -> Unit) -> Unit,
+    val map: @Composable (markers: List<MapHost.Marker>, selectedId: String?, device: Coordinates?) -> Unit,
+)
+
+// --- Public API: only 5 parameters ---
 @Composable
 fun GeneralPoolScreen(
     state: GeneralPoolUiState,
-    mapHost: MapHost,
-    onFocusOnOrder: (OrderInfo, closeSearch: Boolean) -> Unit,
-    onDistanceChange: (Double) -> Unit,
-    onOrderSelected: (OrderInfo?) -> Unit,
-    onAddToMe: (OrderInfo) -> Unit,
-    deviceCoords: Coordinates?,
-    // slots to let the app provide its own UI bits if it wants:
-    distanceFilterBar: @Composable (maxDistanceKm: Double, onChange: (Double) -> Unit) -> Unit,
-    searchDropdown: @Composable (visible: Boolean, orders: List<OrderInfo>, onPick: (OrderInfo) -> Unit) -> Unit,
-    map: @Composable (markers: List<MapHost.Marker>, selectedId: String?, device: Coordinates?) -> Unit,
+    env: GeneralPoolEnvironment,
+    callbacks: GeneralPoolCallbacks,
+    slots: GeneralPoolSlots,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier.fillMaxSize()) {
-        // Map
+        // Map markers
         val markers = remember(state.orders) {
             state.orders.map {
                 MapHost.Marker(
@@ -45,34 +57,40 @@ fun GeneralPoolScreen(
                 )
             }
         }
-        map(markers, state.selectedOrder?.id, deviceCoords)
 
-        // Distance filter or hint
+        // Map
+        slots.map(markers, state.selectedOrder?.id, env.deviceCoords)
+
+        // Distance filter (or hint space)
         if (state.hasLocationPerm) {
-            Row(Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp)) {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
+            ) {
                 Spacer(Modifier.weight(1f))
-                distanceFilterBar(state.distanceThresholdKm, onDistanceChange)
+                slots.distanceFilterBar(state.distanceThresholdKm, callbacks.onDistanceChange)
                 Spacer(Modifier.weight(1f))
             }
         } else {
-            // App can overlay its own hint if needed (left minimal on purpose)
+            // host app may show its own overlay/hint if needed
         }
 
         // Search dropdown
-        searchDropdown(
-            visible = state.searching && state.searchText.isNotBlank(),
-            orders = state.orders.filter { it.distanceKm.isFinite() && it.distanceKm <= state.distanceThresholdKm },
-        ) { picked ->
-            onFocusOnOrder(picked, true)
-        }
+        slots.searchDropdown.invoke(
+            state.searching && state.searchText.isNotBlank(),
+            state.orders.filter {
+                it.distanceKm < Double.POSITIVE_INFINITY &&
+                        !it.distanceKm.isNaN() &&
+                        it.distanceKm <= state.distanceThresholdKm
+            },
+            { picked -> callbacks.onFocusOnOrder(picked, true) }
+        )
 
-        // Bottom content (simplified): list/call-to-action area is app’s responsibility.
-        // Expose selected order action:
+        // Bottom CTA (example)
         state.selectedOrder?.let { sel ->
             AssistChip(
-                onClick = { onAddToMe(sel) },
+                onClick = { callbacks.onAddToMe(sel) },
                 label = { Text("Add to me (${sel.orderNumber})") },
                 modifier = Modifier
                     .align(androidx.compose.ui.Alignment.BottomCenter)

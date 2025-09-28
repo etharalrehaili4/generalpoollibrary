@@ -1,6 +1,5 @@
 package com.example.generalpool.models
 
-// ----- Domain models kept minimal & stable -----
 data class Coordinates(val lat: Double, val lng: Double)
 
 data class OrderInfo(
@@ -16,7 +15,6 @@ data class OrderInfo(
     val customerPhone: String? = null,
 )
 
-// Keep wire-format separate from UI model for stability
 data class Order(
     val id: String? = null,
     val orderId: String? = null,
