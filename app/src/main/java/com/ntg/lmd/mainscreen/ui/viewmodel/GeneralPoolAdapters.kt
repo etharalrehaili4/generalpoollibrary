@@ -1,7 +1,6 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import android.location.Location
-import com.example.generalpool.DeviceLocationProvider
 import com.example.generalpool.models.Order as LibOrder
 import com.example.generalpool.models.OrderInfo as LibOrderInfo
 import com.example.generalpool.repository.LiveOrdersRepository as LibLiveRepo
@@ -14,6 +13,10 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import com.example.generalpool.models.Coordinates as LibCoords
+import com.ntg.core.location.location.domain.model.Coordinates as AppCoords
+import com.ntg.core.location.location.domain.model.MapMarker
+
 
 // ---------- MAPPERS ----------
 
@@ -33,8 +36,6 @@ private fun AppOrder.toLibOrder(): LibOrder =
         longitude = coordinates?.longitude ?: longitude
     )
 
-private fun LibOrderInfo.toAppStatus(): Int? = statusId
-
 class LiveOrdersRepositoryAdapter(
     private val appRepo: AppLiveRepo,
     private val scope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO),
@@ -53,11 +54,8 @@ class LiveOrdersRepositoryAdapter(
         }
 
     override fun connectToOrders(channelName: String) = appRepo.connectToOrders(channelName)
-
     override fun disconnectFromOrders() = appRepo.disconnectFromOrders()
-
     override fun retryConnection() = appRepo.retryConnection()
-
     override fun orders(): StateFlow<List<LibOrder>> = state
 }
 
@@ -79,3 +77,19 @@ class DeviceLocationProviderAdapter(
         return last to current
     }
 }
+
+// Coordinates conversions
+fun LibCoords.toApp(): AppCoords = AppCoords(lat = lat, lng = lng)
+fun AppCoords.toLib(): LibCoords =
+    LibCoords(lat = latitude, lng = longitude) // if your AppCoords is latitude/longitude names
+
+// Markers conversion for your map
+fun MapHost.Marker.toAppMarker(): MapMarker =
+    MapMarker(
+        id = id,
+        title = title,
+        coordinates = LibCoords(coords.lat, coords.lng).toApp(),
+        distanceKm = distanceKm,
+        snippet = snippet
+    )
+

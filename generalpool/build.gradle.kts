@@ -55,4 +55,16 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.activity.compose)
 
+    // location lib
+    implementation("com.github.R-0515:core-location:-SNAPSHOT")
+    // Retrofit
+    implementation(libs.retrofit)
+    // Gson Converter
+    implementation(libs.converter.gson)
+    // OkHttp
+    implementation(libs.okhttp)
+
+    // network
+    implementation("com.github.Raghad-almehmadi:network_library:3")
+
 }

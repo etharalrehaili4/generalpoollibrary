@@ -17,7 +17,6 @@ class OrdersSocketBridge(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private var listenerStarted = false
 
-    // نفس الاسم الذي كان يستخدمه الريبو
     val orders: StateFlow<List<com.ntg.lmd.mainscreen.data.model.Order>> = store.state
 
     fun connect(channel: String) = socket.connect(channel)
