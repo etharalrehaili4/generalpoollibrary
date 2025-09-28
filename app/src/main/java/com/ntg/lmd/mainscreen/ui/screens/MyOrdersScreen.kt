@@ -43,12 +43,13 @@ import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel.OrderLogger
-import com.ntg.lmd.network.core.RetrofitProvider.userStore
+import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -224,6 +225,7 @@ fun myOrdersLocationSection(
 
 @Composable
 private fun myOrdersUserSection(deps: WireDeps) {
+    val userStore: SecureUserStore = koinInject()
     val currentUserId: String? = remember { userStore.getUserId() }
     LaunchedEffect(currentUserId) {
         deps.ordersVm.listVM.setCurrentUserId(currentUserId)
