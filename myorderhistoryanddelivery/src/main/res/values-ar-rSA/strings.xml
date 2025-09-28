@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pdf_title">سجل الطلبات</string>
+    <string name="pdf_header_no">#</string>
+    <string name="pdf_header_customer">العميل</string>
+    <string name="pdf_header_total">الإجمالي</string>
+    <string name="pdf_header_status">الحالة</string>
+    <string name="pdf_header_age">المدة</string>
+    <string name="pdf_share_title">مشاركة ملف PDF للطلبات</string>
+
+    <!-- Currency -->
+    <string name="currency_egp">جنيه</string>
+
+    <!-- dialog -->
+    <string name="filter">تصفية</string>
+    <string name="apply">تطبيق</string>
+    <string name="cancel">إلغاء</string>
+    <string name="statuses">الحالات</string>
+
+    <!-- status labels -->
+    <string name="delivered">تم التسليم</string>
+    <string name="cancelled">ملغي</string>
+    <string name="failed">فشل</string>
+    <string name="sort">ترتيب</string>
+
+    <string name="sort_asc">تصاعدي (الأقدم أولاً)</string>
+    <string name="sort_desc">تنازلي (الأحدث أولاً)</string>
+    <string name="export_pdf">تصدير PDF</string>
+
+    <!-- time labels -->
+    <string name="time_just_now">الآن</string>
+    <string name="time_h_m_ago">منذ %1$d ساعة و%2$d دقيقة</string>
+    <string name="time_d_h_ago">منذ %1$d يوم و%2$d ساعة</string>
+    <string name="time_m_ago">منذ %1$d دقيقة</string>
+    <string name="order_details">تفاصيل</string>
+    <string name="delivery_time">وقت التوصيل</string>
+    <string name="SLA">SLA</string>
+    <string name="no_deliveries_yet">لا توجد طلبات حتى الآن</string>
+    <string name="time_minutes_ago">منذ %1$d دقيقة</string>
+    <string name="time_one_hour_ago">منذ ساعة واحدة</string>
+    <string name="time_hours_ago">منذ %1$d ساعة</string>
+    <string name="time_one_day_ago">منذ يوم واحد</string>
+    <string name="time_days_ago">منذ %1$d يوم</string>
+</resources>
