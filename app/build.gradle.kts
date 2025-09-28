@@ -192,9 +192,10 @@ dependencies {
     // vertical list library
     implementation("com.github.etharalrehaili4:verticallist:834045a12a")
 
-    //location lib
+    // location lib
     implementation("com.github.R-0515:core-location:-SNAPSHOT")
 }
+
 // Custom tasks for code quality checks
 tasks.register("checkUnusedAssets") {
     group = "verification"
