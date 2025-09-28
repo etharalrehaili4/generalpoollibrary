@@ -1,4 +1,4 @@
-package com.example.verticallist
+package com.example.generalpool
 
 import org.junit.Test
 
