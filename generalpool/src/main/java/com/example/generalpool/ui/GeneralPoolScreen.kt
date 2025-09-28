@@ -22,15 +22,16 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import com.example.generalpool.models.GeneralPoolCallbacks
 import com.example.generalpool.models.GeneralPoolUiState
 import com.example.generalpool.models.OrderInfo
 import com.example.generalpool.models.OrderStatus
 import com.example.generalpool.vm.GeneralPoolViewModel
+import com.example.generalpool.vm.UpdateOrderStatusViewModel
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.IMapStates
 import com.ntg.core.location.location.domain.model.cameraUpdateZoom
@@ -39,6 +40,8 @@ import com.ntg.core.location.location.screen.component.provideMapStates
 import com.ntg.core.location.location.screen.mapScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 // Map / Camera behavior
 private const val INITIAL_MAP_ZOOM = 12f
@@ -56,6 +59,7 @@ fun generalPoolScreen(
     val deviceCoords by generalPoolViewModel.deviceCoordinates.collectAsStateWithLifecycle()
     val hasCenteredOnDevice = remember { mutableStateOf(false) }
     val userStore: SecureUserStore = koinInject()
+
     // Extracted setup
     setupGeneralPool(
         viewModel = generalPoolViewModel,
@@ -101,7 +105,12 @@ private fun setupGeneralPool(
 ) {
     val userStore: SecureUserStore = koinInject()
     val currentUserId = remember { userStore.getUserId() }
-    setupInitialCamera(viewModel.ui.collectAsState().value, deviceCoords, mapStates, hasCenteredOnDevice)
+    setupInitialCamera(
+        viewModel.ui.collectAsState().value,
+        deviceCoords,
+        mapStates,
+        hasCenteredOnDevice
+    )
 
     LaunchedEffect(Unit) {
         viewModel.setCurrentUserId(currentUserId)
@@ -234,7 +243,7 @@ private fun distanceFilterRow(
 private fun locationAccessHint() {
     Box(Modifier.fillMaxSize()) {
         Text(
-            text = stringResource(R.string.location_access_request),
+            text = "location access request",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier =

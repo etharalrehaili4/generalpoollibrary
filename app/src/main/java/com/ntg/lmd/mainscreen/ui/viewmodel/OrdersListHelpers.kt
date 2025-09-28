@@ -1,10 +1,10 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import android.content.Context
+import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.models.OrderStatus
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
-import com.ntg.lmd.mainscreen.domain.model.OrderStatus
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -1,9 +1,9 @@
 package com.ntg.lmd.mainscreen.ui.model
 
+import com.example.generalpool.models.OrderInfo
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.MapMarker
 import com.ntg.core.location.location.domain.model.MapUiState
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 
 data class MyOrdersPoolUiState(
     val isLoading: Boolean = true,

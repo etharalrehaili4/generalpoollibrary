@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.example.generalpool.models.OrderInfo
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.IMapStates
 import com.ntg.core.location.location.domain.model.MapMarker
@@ -36,7 +37,6 @@ import com.ntg.core.location.location.screen.mapScreen
 import com.ntg.horizontallist.GeneralHorizontalList
 import com.ntg.horizontallist.GeneralHorizontalListCallbacks
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.ui.components.myPoolOrderCardItem
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersPoolUiState
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel

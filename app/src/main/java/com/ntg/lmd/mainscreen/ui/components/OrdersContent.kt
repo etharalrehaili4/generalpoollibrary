@@ -9,15 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import com.example.generalpool.models.OrderStatus
+import com.example.generalpool.vm.UpdateOrderStatusViewModel
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.domain.model.OrderStatus
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState
 import com.ntg.lmd.mainscreen.ui.screens.OrderListCallbacks
 import com.ntg.lmd.mainscreen.ui.screens.OrderListState
 import com.ntg.lmd.mainscreen.ui.screens.orderList
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
 
 data class OrdersContentDeps(
     val updateVm: UpdateOrderStatusViewModel,

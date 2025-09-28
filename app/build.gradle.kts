@@ -198,9 +198,11 @@ dependencies {
     implementation("com.github.R-0515:core-location:-SNAPSHOT")
 
     implementation(project(":generalpool"))
-    implementation("com.google.maps.android:maps-compose:6.1.0")
-    implementation("com.google.android.gms:play-services-maps:19.0.0")
+
+//    implementation("com.google.maps.android:maps-compose:6.1.0")
+//    implementation("com.google.android.gms:play-services-maps:19.0.0")
 }
+
 // Custom tasks for code quality checks
 tasks.register("checkUnusedAssets") {
     group = "verification"

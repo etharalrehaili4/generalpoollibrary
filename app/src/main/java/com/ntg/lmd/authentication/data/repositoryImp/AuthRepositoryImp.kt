@@ -39,7 +39,7 @@ class AuthRepositoryImp(
             NetworkResult.Error(NetworkError.fromException(e))
         }
 
-    override fun getCurrentUser(): User? = userStore.getUser()
+    override fun getCurrentUser(): User? = userStore.getUser() as User?
 
     override fun isAuthenticated(): Boolean = store.getAccessToken()?.isNotBlank() == true
 

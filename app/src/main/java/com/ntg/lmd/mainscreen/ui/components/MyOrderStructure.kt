@@ -34,10 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.models.OrderStatus
+import com.example.generalpool.vm.UpdateOrderStatusViewModel
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
-import com.ntg.lmd.mainscreen.domain.model.OrderStatus
-import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel.OrderLogger
 import java.util.Locale
 
 @Composable
@@ -269,7 +269,7 @@ private fun menuItems(
         enabled = enabled,
         onClick = {
             menuState.onDismiss()
-            OrderLogger.uiTap(order.id, order.orderNumber, "Menu:PickUp")
+            UpdateOrderStatusViewModel.OrderLogger.uiTap(order.id, order.orderNumber, "Menu:PickUp")
             menuState.onPickUp()
         },
     )
@@ -278,7 +278,7 @@ private fun menuItems(
         enabled = enabled, // status is CONFIRMED here
         onClick = {
             menuState.onDismiss()
-            OrderLogger.uiTap(order.id, order.orderNumber, "Menu:Cancel")
+            UpdateOrderStatusViewModel.OrderLogger.uiTap(order.id, order.orderNumber, "Menu:Cancel")
             menuState.onCancel()
         },
     )
@@ -287,7 +287,11 @@ private fun menuItems(
         enabled = enabled,
         onClick = {
             menuState.onDismiss()
-            OrderLogger.uiTap(order.id, order.orderNumber, "Menu:Reassign")
+            UpdateOrderStatusViewModel.OrderLogger.uiTap(
+                order.id,
+                order.orderNumber,
+                "Menu:Reassign"
+            )
             menuState.onReassign()
         },
     )

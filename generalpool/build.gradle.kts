@@ -63,8 +63,20 @@ dependencies {
     implementation(libs.converter.gson)
     // OkHttp
     implementation(libs.okhttp)
-
     // network
     implementation("com.github.Raghad-almehmadi:network_library:3")
+    // horizontal
+    implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
+    // Koin
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation("com.github.shsaudhrb:HorizontalList:0882e3c3a0")
+    // Navigation
+    implementation(libs.androidx.navigation.compose)
+    // security
+    implementation(libs.androidx.security.crypto)
+    // vertical list library
+    implementation("com.github.etharalrehaili4:verticallist:834045a12a")
+
 
 }

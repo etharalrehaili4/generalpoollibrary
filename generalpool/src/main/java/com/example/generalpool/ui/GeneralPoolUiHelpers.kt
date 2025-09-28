@@ -8,10 +8,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.generalpool.models.GeneralPoolUiState
 import com.example.generalpool.models.OrderInfo
+import com.ntg.horizontallist.GeneralHorizontalList
+import com.ntg.horizontallist.GeneralHorizontalListCallbacks
 
 @Composable
 fun poolBottomContent(
@@ -36,7 +37,7 @@ fun poolBottomContent(
 fun loadingText() {
     Box(Modifier.fillMaxSize()) {
         Text(
-            text = stringResource(R.string.loading_text),
+            text = "loading",
             modifier =
                 Modifier
                     .align(Alignment.Center)
@@ -55,11 +56,12 @@ fun ordersHorizontalList(
 ) {
     Box(Modifier.fillMaxSize()) {
         Box(Modifier.align(Alignment.BottomCenter)) {
-            generalHorizontalList(
-                orders = ui.filteredOrdersInRange,
+            GeneralHorizontalList(
+                items = ui.filteredOrdersInRange,
+                key = { it.orderNumber },
                 callbacks =
-                    HorizontalListCallbacks(
-                        onCenteredOrderChange = { order, _ ->
+                    GeneralHorizontalListCallbacks(
+                        onCenteredItemChange = { order, _ ->
                             focusOnOrder(order, false)
                             onOrderSelected(order)
                         },
@@ -75,3 +77,4 @@ fun ordersHorizontalList(
         }
     }
 }
+

@@ -8,9 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.example.generalpool.ui.generalPoolScreen
 import com.ntg.lmd.mainscreen.ui.screens.chatScreen
 import com.ntg.lmd.mainscreen.ui.screens.deliveriesLogScreen
-import com.ntg.lmd.mainscreen.ui.screens.generalPoolScreen
 import com.ntg.lmd.mainscreen.ui.screens.myOrdersScreen
 import com.ntg.lmd.mainscreen.ui.screens.myPoolScreen
 import com.ntg.lmd.mainscreen.ui.screens.orderDetailsScreen

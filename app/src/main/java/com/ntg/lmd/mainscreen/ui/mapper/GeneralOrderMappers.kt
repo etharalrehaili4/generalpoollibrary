@@ -1,9 +1,9 @@
 package com.ntg.lmd.mainscreen.ui.mapper
 
+import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.models.OrderStatus
+import com.example.generalpool.models.RelativeTime
 import com.ntg.lmd.mainscreen.data.model.Order
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
-import com.ntg.lmd.mainscreen.domain.model.OrderStatus
-import com.ntg.lmd.mainscreen.domain.model.RelativeTime
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale

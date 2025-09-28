@@ -10,12 +10,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.vm.UpdateOrderStatusViewModel
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.ui.components.OrdersUiConstants.VISIBLE_THRESHOLD
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

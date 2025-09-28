@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.generalpool.models.OrderInfo
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import java.util.Locale
 
 @Composable

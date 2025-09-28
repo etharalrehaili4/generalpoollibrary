@@ -2,6 +2,7 @@ package com.example.generalpool.ui
 
 import com.example.generalpool.models.Order
 import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.models.OrderStatus
 import com.example.generalpool.models.RelativeTime
 import java.text.ParseException
 import java.text.SimpleDateFormat

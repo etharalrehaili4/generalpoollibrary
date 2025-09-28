@@ -22,13 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
+import com.example.generalpool.models.OrderStatus
+import com.example.generalpool.models.toMapMarker
+import com.example.generalpool.vm.UpdateOrderStatusViewModel
 import com.ntg.core.location.location.domain.repository.LocationProvider
 import com.ntg.core.location.location.screen.component.initialCameraPositionEffect
 import com.ntg.core.location.location.screen.component.locationPermissionHandler
 import com.ntg.core.location.location.screen.component.provideMapStates
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.domain.model.OrderStatus
-import com.ntg.lmd.mainscreen.domain.model.toMapMarker
 import com.ntg.lmd.mainscreen.ui.components.OrdersContentCallbacks
 import com.ntg.lmd.mainscreen.ui.components.OrdersContentDeps
 import com.ntg.lmd.mainscreen.ui.components.bottomStickyButton
@@ -41,8 +42,6 @@ import com.ntg.lmd.mainscreen.ui.viewmodel.ActiveAgentsViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.AgentsState
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel.OrderLogger
 import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -162,7 +161,7 @@ private fun reassignSheet(
             val orderId = deps.reassignOrderId.value ?: return@reassignBottomSheet
             android.util.Log.d("ReassignFlow", "onSelect: orderId=$orderId → newAssignee=${user.id}")
 
-            OrderLogger.uiTap(
+            UpdateOrderStatusViewModel.OrderLogger.uiTap(
                 orderId,
                 uiOrders.orders.firstOrNull { it.id == orderId }?.orderNumber,
                 "Menu:Reassign→${user.name}",

@@ -1,9 +1,9 @@
 package com.ntg.lmd.mainscreen.data.repository
 
+import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.models.OrderStatus
 import com.ntg.lmd.mainscreen.data.datasource.remote.OrdersApi
 import com.ntg.lmd.mainscreen.data.mapper.toDomain
-import com.ntg.lmd.mainscreen.domain.model.OrderInfo
-import com.ntg.lmd.mainscreen.domain.model.OrderStatus
 import com.ntg.lmd.mainscreen.domain.model.OrdersPage
 import com.ntg.lmd.mainscreen.domain.repository.MyOrdersRepository
 
