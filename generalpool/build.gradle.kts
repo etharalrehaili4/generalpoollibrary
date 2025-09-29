@@ -77,6 +77,10 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     // vertical list library
     implementation("com.github.etharalrehaili4:verticallist:834045a12a")
+    // login-logout
+//    implementation("com.github.shsaudhrb:Login-Logout:-45d8644a89-1")
+    implementation("com.github.shsaudhrb:Login-Logout:-SNAPSHOT")
+
 
 
 }

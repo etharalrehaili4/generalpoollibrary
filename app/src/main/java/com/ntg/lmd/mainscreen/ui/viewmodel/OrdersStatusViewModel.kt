@@ -1,8 +1,8 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.generalpool.models.OrderInfo
-import com.example.generalpool.models.OrderStatus
+import com.example.generalpool.domain.model.OrderInfo
+import com.example.generalpool.domain.model.OrderStatus
 import kotlinx.coroutines.flow.update
 
 class OrdersStatusViewModel(

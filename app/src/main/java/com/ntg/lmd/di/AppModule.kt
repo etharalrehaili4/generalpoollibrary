@@ -1,5 +1,26 @@
 package com.ntg.lmd.di
 
+import com.example.auth.data.datasource.remote.api.AuthApi
+import com.example.auth.data.repositoryImp.AuthRepositoryImp
+import com.example.auth.domain.repository.AuthRepository
+import com.example.auth.domain.usecase.LoginUseCase
+import com.example.auth.settings.data.SettingsPreferenceDataSource
+import com.example.auth.settings.ui.viewmodel.SettingsViewModel
+import com.example.auth.ui.viewmodel.LoginViewModel
+import com.example.auth.utils.LogoutManager
+import com.example.auth.utils.SecureUserStore
+import com.example.generalpool.data.datasource.remote.LiveOrdersApiService
+import com.example.generalpool.data.datasource.remote.UpdatetOrdersStatusApi
+import com.example.generalpool.data.repository.LiveOrdersRepositoryImpl
+import com.example.generalpool.data.repository.OrdersSocketBridge
+import com.example.generalpool.data.repository.UpdateOrdersStatusRepositoryImpl
+import com.example.generalpool.domain.repository.LiveOrdersRepository
+import com.example.generalpool.domain.repository.UpdateOrdersStatusRepository
+import com.example.generalpool.domain.usecase.LoadOrdersUseCase
+import com.example.generalpool.domain.usecase.OrdersRealtimeUseCase
+import com.example.generalpool.domain.usecase.UpdateOrderStatusUseCase
+import com.example.generalpool.ui.vm.GeneralPoolViewModel
+import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.example.myorderhistoryanddelivery.delivery.data.remote.api.DeliveriesLogApi
 import com.example.myorderhistoryanddelivery.delivery.data.remote.repositoryimpl.DeliveriesLogRepositoryImpl
 import com.example.myorderhistoryanddelivery.delivery.domain.repository.DeliveriesLogRepository
@@ -15,40 +36,19 @@ import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.core.location.location.domain.usecase.GetDeviceLocationsUseCase
 import com.google.gson.Gson
 import com.ntg.lmd.BuildConfig
-import com.ntg.lmd.authentication.data.datasource.remote.api.AuthApi
-import com.ntg.lmd.authentication.data.repositoryImp.AuthRepositoryImp
-import com.ntg.lmd.authentication.domain.repository.AuthRepository
-import com.ntg.lmd.authentication.domain.usecase.LoginUseCase
-import com.ntg.lmd.authentication.ui.viewmodel.login.LoginViewModel
 import com.ntg.lmd.mainscreen.data.datasource.remote.GetUsersApi
-import com.ntg.lmd.mainscreen.data.datasource.remote.LiveOrdersApiService
 import com.ntg.lmd.mainscreen.data.datasource.remote.OrdersApi
-import com.ntg.lmd.mainscreen.data.datasource.remote.UpdatetOrdersStatusApi
-import com.ntg.lmd.mainscreen.data.repository.LiveOrdersRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.MyOrdersRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.OrderStore
 import com.ntg.lmd.mainscreen.data.repository.OrdersChangeHandler
-import com.ntg.lmd.mainscreen.data.repository.OrdersSocketBridge
-import com.ntg.lmd.mainscreen.data.repository.UpdateOrdersStatusRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.UsersRepositoryImpl
-import com.ntg.lmd.mainscreen.domain.repository.LiveOrdersRepository
 import com.ntg.lmd.mainscreen.domain.repository.MyOrdersRepository
-import com.ntg.lmd.mainscreen.domain.repository.UpdateOrdersStatusRepository
 import com.ntg.lmd.mainscreen.domain.repository.UsersRepository
 import com.ntg.lmd.mainscreen.domain.usecase.GetActiveUsersUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.LoadOrdersUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.OrdersRealtimeUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.UpdateOrderStatusUseCase
 import com.ntg.lmd.mainscreen.ui.viewmodel.ActiveAgentsViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
-import com.ntg.lmd.settings.data.SettingsPreferenceDataSource
-import com.ntg.lmd.settings.ui.viewmodel.SettingsViewModel
-import com.ntg.lmd.utils.LogoutManager
-import com.ntg.lmd.utils.SecureUserStore
 import com.ntg.network.authheader.SecureTokenStore
 import com.ntg.network.authheader.TokenStore
 import com.ntg.network.connectivity.NetworkMonitor
@@ -184,8 +184,8 @@ val generalPoolModule = module {
     // ViewModel
     viewModel {
         GeneralPoolViewModel(
-            ordersRealtime    = get(),
-            computeDistances  = get(),
+            ordersRealtime = get(),
+            computeDistances = get(),
             getDeviceLocations = get(),
             loadOrdersUseCase = get(),
         )
@@ -201,8 +201,8 @@ val settingsModule = module {
     single {
         LogoutManager(
             tokenStore = get<SecureTokenStore>(),
-            userStore  = get<SecureUserStore>(),
-            socket     = get<SocketIntegration>()
+            userStore = get<SecureUserStore>(),
+            socket = get<SocketIntegration>()
         )
     }
 

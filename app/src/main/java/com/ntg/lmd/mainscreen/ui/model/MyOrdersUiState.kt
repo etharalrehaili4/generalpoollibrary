@@ -1,6 +1,6 @@
 package com.ntg.lmd.mainscreen.ui.model
 
-import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.domain.model.OrderInfo
 
 data class MyOrdersUiState(
     val orders: List<OrderInfo> = emptyList(),

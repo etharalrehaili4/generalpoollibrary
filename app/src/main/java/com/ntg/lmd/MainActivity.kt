@@ -12,6 +12,7 @@ import androidx.activity.viewModels
 import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.auth.utils.LocaleHelper.applyLanguage
 import com.ntg.lmd.authentication.ui.components.NotificationPermissionState
 import com.ntg.lmd.navigation.appNavGraph
 import com.ntg.lmd.notification.data.dataSource.remote.FcmNotificationHelper
@@ -19,7 +20,6 @@ import com.ntg.lmd.notification.ui.viewmodel.DeepLinkViewModel
 import com.ntg.lmd.notification.ui.viewmodel.NotificationsVMFactory
 import com.ntg.lmd.notification.ui.viewmodel.NotificationsViewModel
 import com.ntg.lmd.ui.theme.lmdTheme
-import com.ntg.lmd.utils.LocaleHelper.applyLanguage
 
 class MainActivity : ComponentActivity() {
     override fun attachBaseContext(newBase: Context) {

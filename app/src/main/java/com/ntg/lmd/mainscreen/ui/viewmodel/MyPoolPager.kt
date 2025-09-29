@@ -1,6 +1,6 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
-import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
 
 class MyPoolPager(

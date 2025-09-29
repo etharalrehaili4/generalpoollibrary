@@ -24,7 +24,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.domain.model.OrderInfo
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.IMapStates
 import com.ntg.core.location.location.domain.model.MapMarker

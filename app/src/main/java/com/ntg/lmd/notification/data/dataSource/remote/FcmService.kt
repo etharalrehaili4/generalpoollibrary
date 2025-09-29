@@ -2,13 +2,13 @@ package com.ntg.lmd.notification.data.dataSource.remote
 
 import android.util.Log
 import androidx.core.app.NotificationManagerCompat
+import com.example.auth.utils.SecureUserStore
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.ntg.lmd.R
 import com.ntg.lmd.notification.data.model.FCMServiceLocator
 import com.ntg.lmd.notification.domain.model.AgentNotification
-import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

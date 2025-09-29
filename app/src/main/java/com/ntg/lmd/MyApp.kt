@@ -1,9 +1,9 @@
 package com.ntg.lmd
 
 import android.app.Application
+import com.example.auth.data.datasource.remote.api.AuthApi
+import com.example.auth.utils.SupabaseTokenRefresher
 import com.ntg.core.location.di.locationModule
-import com.ntg.lmd.utils.SupabaseTokenRefresher
-import com.ntg.lmd.authentication.data.datasource.remote.api.AuthApi
 import com.ntg.lmd.di.MyOrderMyPoolModule
 import com.ntg.lmd.di.authModule
 import com.ntg.lmd.di.deliveriesLogModule

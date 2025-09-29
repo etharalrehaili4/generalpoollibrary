@@ -1,6 +1,6 @@
 package com.ntg.lmd.mainscreen.ui.model
 
-import com.example.generalpool.models.OrderStatus
+import com.example.generalpool.domain.model.OrderStatus
 import kotlinx.coroutines.flow.MutableSharedFlow
 
 object LocalUiOnlyStatusBus {

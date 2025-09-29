@@ -12,9 +12,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.generalpool.models.OrderInfo
-import com.example.generalpool.models.OrderStatus
-import com.example.generalpool.vm.UpdateOrderStatusViewModel
+import com.example.generalpool.domain.model.OrderInfo
+import com.example.generalpool.domain.model.OrderStatus
+import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.example.verticallist.PagingState
 import com.example.verticallist.defaultVerticalListConfig
 import com.example.verticallist.verticalListComponent

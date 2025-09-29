@@ -1,7 +1,7 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.paging.OrdersPaging
 import kotlinx.coroutines.flow.update
 

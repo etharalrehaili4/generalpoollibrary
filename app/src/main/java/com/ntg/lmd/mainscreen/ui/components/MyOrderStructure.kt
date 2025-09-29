@@ -34,9 +34,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.generalpool.models.OrderInfo
-import com.example.generalpool.models.OrderStatus
-import com.example.generalpool.vm.UpdateOrderStatusViewModel
+import com.example.generalpool.domain.model.OrderInfo
+import com.example.generalpool.domain.model.OrderStatus
+import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.ntg.lmd.R
 import java.util.Locale
 

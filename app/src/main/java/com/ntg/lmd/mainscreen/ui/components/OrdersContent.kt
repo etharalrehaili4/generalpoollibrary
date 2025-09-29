@@ -9,8 +9,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import com.example.generalpool.models.OrderStatus
-import com.example.generalpool.vm.UpdateOrderStatusViewModel
+import com.example.generalpool.domain.model.OrderStatus
+import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState

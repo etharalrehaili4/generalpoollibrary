@@ -22,9 +22,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import com.example.generalpool.models.OrderStatus
-import com.example.generalpool.models.toMapMarker
-import com.example.generalpool.vm.UpdateOrderStatusViewModel
+import com.example.auth.utils.SecureUserStore
+import com.example.generalpool.domain.model.OrderStatus
+import com.example.generalpool.domain.model.toMapMarker
+import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.ntg.core.location.location.domain.repository.LocationProvider
 import com.ntg.core.location.location.screen.component.initialCameraPositionEffect
 import com.ntg.core.location.location.screen.component.locationPermissionHandler
@@ -42,7 +43,6 @@ import com.ntg.lmd.mainscreen.ui.viewmodel.ActiveAgentsViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.AgentsState
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
-import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull

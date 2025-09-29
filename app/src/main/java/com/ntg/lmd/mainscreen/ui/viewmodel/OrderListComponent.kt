@@ -1,8 +1,8 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import android.content.Context
-import com.example.generalpool.models.OrderInfo
-import com.example.generalpool.vm.toUserMessage
+import com.example.generalpool.domain.model.OrderInfo
+import com.example.generalpool.ui.vm.toUserMessage
 import com.ntg.lmd.mainscreen.domain.paging.OrdersPaging
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus

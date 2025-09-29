@@ -3,7 +3,7 @@ package com.ntg.lmd.mainscreen.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.generalpool.models.OrderInfo
+import com.example.generalpool.domain.model.OrderInfo
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.lmd.mainscreen.domain.paging.OrdersPaging
