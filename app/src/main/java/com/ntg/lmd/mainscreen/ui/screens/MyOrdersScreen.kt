@@ -23,14 +23,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.auth.utils.SecureUserStore
-import com.example.generalpool.domain.model.OrderStatus
-import com.example.generalpool.domain.model.toMapMarker
-import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.ntg.core.location.location.domain.repository.LocationProvider
 import com.ntg.core.location.location.screen.component.initialCameraPositionEffect
 import com.ntg.core.location.location.screen.component.locationPermissionHandler
 import com.ntg.core.location.location.screen.component.provideMapStates
 import com.ntg.lmd.R
+import com.ntg.lmd.mainscreen.domain.model.OrderStatus
+import com.ntg.lmd.mainscreen.domain.model.toMapMarker
 import com.ntg.lmd.mainscreen.ui.components.OrdersContentCallbacks
 import com.ntg.lmd.mainscreen.ui.components.OrdersContentDeps
 import com.ntg.lmd.mainscreen.ui.components.bottomStickyButton
@@ -43,6 +42,8 @@ import com.ntg.lmd.mainscreen.ui.viewmodel.ActiveAgentsViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.AgentsState
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
+import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
+import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel.OrderLogger
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
@@ -161,7 +162,7 @@ private fun reassignSheet(
             val orderId = deps.reassignOrderId.value ?: return@reassignBottomSheet
             android.util.Log.d("ReassignFlow", "onSelect: orderId=$orderId → newAssignee=${user.id}")
 
-            UpdateOrderStatusViewModel.OrderLogger.uiTap(
+            OrderLogger.uiTap(
                 orderId,
                 uiOrders.orders.firstOrNull { it.id == orderId }?.orderNumber,
                 "Menu:Reassign→${user.name}",

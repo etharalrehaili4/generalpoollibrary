@@ -24,7 +24,6 @@ import com.example.auth.ui.login.LoginScreen
 import com.ntg.lmd.R
 import com.ntg.lmd.navigation.component.drawerHost
 import com.ntg.lmd.navigation.component.navigateSingleTop
-import com.ntg.lmd.notification.ui.model.NotificationsState
 import com.ntg.lmd.notification.ui.viewmodel.DeepLinkViewModel
 import com.ntg.lmd.notification.ui.viewmodel.NotificationsViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -113,7 +112,7 @@ private fun handleDrawerHost(
 
     LaunchedEffect(logoutState) {
         when (logoutState) {
-            is NotificationsState.Success -> {
+            is LogoutUiState.Success -> {
                 rootNavController.navigate(Screen.Login.route) {
                     popUpTo(Screen.Drawer.route) { inclusive = true }
                     launchSingleTop = true
