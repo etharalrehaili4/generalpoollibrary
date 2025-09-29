@@ -1,8 +1,8 @@
 package com.ntg.lmd.mainscreen.domain.model
 
+import com.example.myorderhistoryanddelivery.order.domain.model.OrderStatusCode
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.MapMarker
-import com.ntg.lmd.order.domain.model.OrderStatusCode
 
 sealed class RelativeTime {
     data object JustNow : RelativeTime()

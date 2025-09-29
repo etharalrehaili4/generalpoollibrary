@@ -8,15 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.example.myorderhistoryanddelivery.delivery.ui.screen.deliveriesLogScreen
 import com.ntg.lmd.mainscreen.ui.screens.chatScreen
-import com.ntg.lmd.mainscreen.ui.screens.deliveriesLogScreen
 import com.ntg.lmd.mainscreen.ui.screens.generalPoolScreen
 import com.ntg.lmd.mainscreen.ui.screens.myOrdersScreen
 import com.ntg.lmd.mainscreen.ui.screens.myPoolScreen
 import com.ntg.lmd.mainscreen.ui.screens.orderDetailsScreen
 import com.ntg.lmd.navigation.Screen
 import com.ntg.lmd.notification.ui.screens.notificationScreen
-import com.ntg.lmd.order.ui.screen.ordersHistoryRoute
+import  com.example.myorderhistoryanddelivery.order.ui.screen.ordersHistoryRoute
 import com.ntg.lmd.settings.ui.screens.settingsScreen
 
 @Composable

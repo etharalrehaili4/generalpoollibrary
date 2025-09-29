@@ -225,3 +225,4 @@ app/build/reports/coverage/
 .gradle/8.13/fileHashes/fileHashes.lock
 .gradle/8.13/fileHashes/resourceHashesCache.bin
 
+local.properties
