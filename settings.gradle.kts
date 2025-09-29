@@ -19,5 +19,5 @@ dependencyResolutionManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }
-rootProject.name = "lmd"
-include(":app")
+rootProject.name = "generalpoollibrary"
+include(":generalpool") 
