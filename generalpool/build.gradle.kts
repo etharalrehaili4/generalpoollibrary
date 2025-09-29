@@ -38,16 +38,13 @@ android {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                from(components["release"])
-
-                groupId = "com.github.etharalrehaili4"
-                artifactId = "generalpool"
-                version = "1.0.0"
-            }
+publishing {
+    publications {
+        create<MavenPublication>("release") {
+            afterEvaluate { from(components["release"]) }
+            groupId = "com.github.etharalrehaili4"
+            artifactId = "generalpool" 
+            version = "1.0.0"
         }
     }
 }
