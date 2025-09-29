@@ -198,6 +198,9 @@ dependencies {
     implementation("com.github.R-0515:core-location:-SNAPSHOT")
 
     implementation(project(":auth"))
+
+    //My order History Delivery lib
+    implementation("com.github.Raghad-almehmadi:MyorderHistoryDelivery:8")
 }
 // Custom tasks for code quality checks
 tasks.register("checkUnusedAssets") {
