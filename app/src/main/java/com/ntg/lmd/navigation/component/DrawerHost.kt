@@ -12,8 +12,8 @@ import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.ntg.lmd.authentication.domain.repository.AuthRepository
-import com.ntg.lmd.authentication.ui.viewmodel.login.LoginViewModel
+import com.example.auth.domain.repository.AuthRepository
+import com.example.auth.ui.viewmodel.LoginViewModel
 import com.ntg.lmd.mainscreen.domain.model.SearchController
 import com.ntg.lmd.navigation.AppNavConfig
 import com.ntg.lmd.navigation.RouteUiSpec

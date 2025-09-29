@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.auth.utils.SecureUserStore
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.IMapStates
 import com.ntg.core.location.location.domain.model.cameraUpdateZoom
@@ -43,7 +44,6 @@ import com.ntg.lmd.mainscreen.ui.model.GeneralPoolCallbacks
 import com.ntg.lmd.mainscreen.ui.model.GeneralPoolUiState
 import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
-import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
