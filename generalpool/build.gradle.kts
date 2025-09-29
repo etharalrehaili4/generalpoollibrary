@@ -45,7 +45,7 @@ afterEvaluate {
                 from(components["release"])
 
                 groupId = "com.github.etharalrehaili4"
-                artifactId = "generalpoollibrary"
+                artifactId = "generalpool"
                 version = "1.0.0"
             }
         }
