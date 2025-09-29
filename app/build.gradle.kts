@@ -197,7 +197,7 @@ dependencies {
     //location lib
     implementation("com.github.R-0515:core-location:-SNAPSHOT")
 
-    implementation(project(":auth"))
+    implementation("com.github.shsaudhrb:Login-Logout:-SNAPSHOT")
 
     //My order History Delivery lib
     implementation("com.github.Raghad-almehmadi:MyorderHistoryDelivery:8")

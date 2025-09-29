@@ -1,58 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Login / Auth Texts -->
-    <string name="username">اسم المستخدم</string>
-    <string name="agentId">رقم الموظف</string>
-    <string name="password">كلمة المرور</string>
-    <string name="password_placeholder">أدخل كلمة المرور</string>
-    <string name="login">تسجيل الدخول</string>
-    <string name="forgotPassword">نسيت كلمة المرور؟</string>
-
-    <!-- Messages -->
-    <string name="msg_welcome">مرحباً بعودتك!</string>
-    <string name="error_invalid_credentials">اسم المستخدم أو كلمة المرور غير صحيحة</string>
-
-    <!-- Validation Errors -->
-    <string name="error_username_empty">يجب إدخال اسم المستخدم</string>
-    <string name="error_username_invalid">اسم المستخدم غير صالح</string>
-    <string name="error_password_empty">يجب إدخال كلمة المرور</string>
-    <string name="error_password_invalid">كلمة المرور غير صالحة</string>
-    <string name="error_agent_id_invalid">رقم الموظف غير صالح</string>
-
-    <!-- UI / Buttons -->
-    <string name="loading">جاري التحميل...</string>
-    <string name="retry">إعادة المحاولة</string>
-    <string name="ok">حسناً</string>
-
-    <!-- Navigation / Screens -->
-    <string name="screen_login">تسجيل الدخول</string>
-    <string name="screen_register">إنشاء حساب</string>
-    <string name="screen_forgot_password">إعادة تعيين كلمة المرور</string>
-
-    <!--  Language selection -->
-    <string name="app_language_title">لغة التطبيق</string>
-    <string name="settings_app_language">لغة التطبيق</string>
-    <string name="settings_notifications">الإشعارات</string>
-    <string name="every_x_days">كل %1$d يوم</string>
-    <string name="app_language_english">الإنجليزية</string>
-    <string name="app_language_arabic">العربية</string>
-    <string name="apply">تطبيق</string>
-
-    <!-- 🔔 Notification Window Screen -->
-    <string name="notification_title">نافذة الإشعارات</string>
-    <string name="back">رجوع</string>
-
-    <!-- Notification options -->
-    <string name="notif_every_15_days">كل 15 يوم</string>
-    <string name="notif_every_30_days">كل 30 يوم</string>
-    <string name="notif_every_90_days">كل 90 يوم</string>
-
-    <!-- (اختياري) لو عندك شاشات أخرى في settings -->
-    <string name="settings_title">الإعدادات</string>
-    <string name="notification_settings">إعدادات الإشعارات</string>
-    <string name="language_settings">إعداد اللغة</string>
-    <string name="logout">تسجيل الخروج</string>
-    <string name="logout_confirmation">هل أنت متأكد أنك تريد تسجيل الخروج؟</string>
-    <string name="logout_yes">نعم</string>
-    <string name="logout_no">إلغاء</string>
-</resources>

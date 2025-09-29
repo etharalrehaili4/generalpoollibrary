@@ -18,8 +18,6 @@ import com.ntg.lmd.mainscreen.ui.screens.orderDetailsScreen
 import com.ntg.lmd.navigation.Screen
 import com.ntg.lmd.notification.ui.screens.notificationScreen
 import  com.example.myorderhistoryanddelivery.order.ui.screen.ordersHistoryRoute
-import com.ntg.lmd.settings.ui.screens.settingsScreen
-import com.ntg.lmd.order.ui.screen.ordersHistoryRoute
 
 @Composable
 fun drawerNavGraph(
