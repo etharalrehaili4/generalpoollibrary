@@ -3,11 +3,11 @@ package com.ntg.lmd.mainscreen.ui.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.auth.utils.SecureUserStore
 import com.ntg.lmd.mainscreen.domain.model.OrderInfo
 import com.ntg.lmd.mainscreen.domain.model.OrderStatus
 import com.ntg.lmd.mainscreen.domain.model.toApiId
 import com.ntg.lmd.mainscreen.domain.usecase.UpdateOrderStatusUseCase
-import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow

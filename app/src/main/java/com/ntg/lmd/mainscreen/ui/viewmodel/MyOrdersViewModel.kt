@@ -1,11 +1,11 @@
 package com.ntg.lmd.mainscreen.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import com.example.auth.utils.SecureUserStore
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
 import com.ntg.lmd.mainscreen.ui.model.MyOrdersUiState
-import com.ntg.lmd.utils.SecureUserStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

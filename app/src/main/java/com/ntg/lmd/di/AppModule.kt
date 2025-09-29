@@ -1,15 +1,18 @@
 package com.ntg.lmd.di
 
+import com.example.auth.data.datasource.remote.api.AuthApi
+import com.example.auth.data.repositoryImp.AuthRepositoryImp
+import com.example.auth.domain.repository.AuthRepository
+import com.example.auth.domain.usecase.LoginUseCase
+import com.example.auth.settings.data.SettingsPreferenceDataSource
+import com.example.auth.settings.ui.viewmodel.SettingsViewModel
+import com.example.auth.ui.viewmodel.LoginViewModel
+import com.example.auth.utils.LogoutManager
 import com.ntg.core.location.location.domain.repository.LocationRepository
 import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.core.location.location.domain.usecase.GetDeviceLocationsUseCase
 import com.google.gson.Gson
 import com.ntg.lmd.BuildConfig
-import com.ntg.lmd.authentication.data.datasource.remote.api.AuthApi
-import com.ntg.lmd.authentication.data.repositoryImp.AuthRepositoryImp
-import com.ntg.lmd.authentication.domain.repository.AuthRepository
-import com.ntg.lmd.authentication.domain.usecase.LoginUseCase
-import com.ntg.lmd.authentication.ui.viewmodel.login.LoginViewModel
 import com.ntg.lmd.mainscreen.data.datasource.remote.GetUsersApi
 import com.ntg.lmd.mainscreen.data.datasource.remote.LiveOrdersApiService
 import com.ntg.lmd.mainscreen.data.datasource.remote.OrdersApi
@@ -44,13 +47,10 @@ import com.ntg.lmd.order.data.remote.repository.OrdersRepositoryImpl
 import com.ntg.lmd.order.domain.model.repository.OrdersRepository
 import com.ntg.lmd.order.domain.model.usecase.GetOrdersUseCase
 import com.ntg.lmd.order.ui.viewmodel.OrderHistoryViewModel
-import com.ntg.lmd.settings.data.SettingsPreferenceDataSource
-import com.ntg.lmd.settings.ui.viewmodel.SettingsViewModel
-import com.ntg.lmd.utils.LogoutManager
-import com.ntg.lmd.utils.SecureUserStore
 import com.ntg.network.authheader.SecureTokenStore
 import com.ntg.network.authheader.TokenStore
 import com.ntg.network.connectivity.NetworkMonitor
+import com.example.auth.utils.SecureUserStore
 import com.ntg.network.core.RetrofitFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -200,8 +200,8 @@ val settingsModule = module {
     single {
         LogoutManager(
             tokenStore = get<SecureTokenStore>(),
-            userStore  = get<SecureUserStore>(),
-            socket     = get<SocketIntegration>()
+            userStore = get<SecureUserStore>(),
+            socket = get<SocketIntegration>()
         )
     }
 

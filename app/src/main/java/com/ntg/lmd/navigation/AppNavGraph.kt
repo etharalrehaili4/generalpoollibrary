@@ -18,14 +18,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.example.auth.settings.data.LogoutUiState
+import com.example.auth.settings.ui.viewmodel.SettingsViewModel
+import com.example.auth.ui.login.LoginScreen
 import com.ntg.lmd.R
 import com.ntg.lmd.navigation.component.drawerHost
 import com.ntg.lmd.navigation.component.navigateSingleTop
 import com.ntg.lmd.notification.ui.viewmodel.DeepLinkViewModel
 import com.ntg.lmd.notification.ui.viewmodel.NotificationsViewModel
-import com.ntg.lmd.settings.ui.viewmodel.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
-import com.ntg.lmd.authentication.ui.screens.login.loginScreen as LoginScreen
 import com.ntg.lmd.authentication.ui.screens.register.registerScreen as RegisterScreen
 import com.ntg.lmd.authentication.ui.screens.splash.splashScreen as SplashScreen
 
@@ -111,14 +112,14 @@ private fun handleDrawerHost(
 
     LaunchedEffect(logoutState) {
         when (logoutState) {
-            is com.ntg.lmd.settings.data.LogoutUiState.Success -> {
+            is LogoutUiState.Success -> {
                 rootNavController.navigate(Screen.Login.route) {
                     popUpTo(Screen.Drawer.route) { inclusive = true }
                     launchSingleTop = true
                 }
                 settingsVm.resetLogoutState()
             }
-            is com.ntg.lmd.settings.data.LogoutUiState.Error -> {
+            is LogoutUiState.Error -> {
                 settingsVm.resetLogoutState()
             }
             else -> Unit
