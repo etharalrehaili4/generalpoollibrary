@@ -1,8 +1,9 @@
 package com.ntg.lmd.mainscreen.data.repository
 
+import com.example.generalpool.data.models.Order
+import com.example.generalpool.data.repository.OrderStore
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import com.ntg.lmd.mainscreen.data.model.Order
 import com.ntg.network.sockets.ChangeHandler
 
 class OrdersChangeHandler(

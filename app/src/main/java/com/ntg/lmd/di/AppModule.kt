@@ -24,34 +24,34 @@ import com.ntg.core.location.location.domain.usecase.GetDeviceLocationsUseCase
 import com.google.gson.Gson
 import com.ntg.lmd.BuildConfig
 import com.ntg.lmd.mainscreen.data.datasource.remote.GetUsersApi
-import com.ntg.lmd.mainscreen.data.datasource.remote.LiveOrdersApiService
 import com.ntg.lmd.mainscreen.data.datasource.remote.OrdersApi
-import com.ntg.lmd.mainscreen.data.datasource.remote.UpdatetOrdersStatusApi
-import com.ntg.lmd.mainscreen.data.repository.LiveOrdersRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.MyOrdersRepositoryImpl
-import com.ntg.lmd.mainscreen.data.repository.OrderStore
 import com.ntg.lmd.mainscreen.data.repository.OrdersChangeHandler
-import com.ntg.lmd.mainscreen.data.repository.OrdersSocketBridge
-import com.ntg.lmd.mainscreen.data.repository.UpdateOrdersStatusRepositoryImpl
 import com.ntg.lmd.mainscreen.data.repository.UsersRepositoryImpl
-import com.ntg.lmd.mainscreen.domain.repository.LiveOrdersRepository
 import com.ntg.lmd.mainscreen.domain.repository.MyOrdersRepository
-import com.ntg.lmd.mainscreen.domain.repository.UpdateOrdersStatusRepository
 import com.ntg.lmd.mainscreen.domain.repository.UsersRepository
 import com.ntg.lmd.mainscreen.domain.usecase.GetActiveUsersUseCase
 import com.ntg.lmd.mainscreen.domain.usecase.GetMyOrdersUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.LoadOrdersUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.OrdersRealtimeUseCase
-import com.ntg.lmd.mainscreen.domain.usecase.UpdateOrderStatusUseCase
 import com.ntg.lmd.mainscreen.ui.viewmodel.ActiveAgentsViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.GeneralPoolViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyOrdersViewModel
 import com.ntg.lmd.mainscreen.ui.viewmodel.MyPoolViewModel
-import com.ntg.lmd.mainscreen.ui.viewmodel.UpdateOrderStatusViewModel
 import com.ntg.network.authheader.SecureTokenStore
 import com.ntg.network.authheader.TokenStore
 import com.ntg.network.connectivity.NetworkMonitor
 import com.example.auth.utils.SecureUserStore
+import com.example.generalpool.data.datasource.remote.LiveOrdersApiService
+import com.example.generalpool.data.datasource.remote.UpdatetOrdersStatusApi
+import com.example.generalpool.data.repository.LiveOrdersRepositoryImpl
+import com.example.generalpool.data.repository.OrderStore
+import com.example.generalpool.data.repository.OrdersSocketBridge
+import com.example.generalpool.data.repository.UpdateOrdersStatusRepositoryImpl
+import com.example.generalpool.domain.repository.LiveOrdersRepository
+import com.example.generalpool.domain.repository.UpdateOrdersStatusRepository
+import com.example.generalpool.domain.usecase.LoadOrdersUseCase
+import com.example.generalpool.domain.usecase.OrdersRealtimeUseCase
+import com.example.generalpool.domain.usecase.UpdateOrderStatusUseCase
+import com.example.generalpool.ui.vm.GeneralPoolViewModel
+import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.ntg.network.core.RetrofitFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -184,8 +184,8 @@ val generalPoolModule = module {
     // ViewModel
     viewModel {
         GeneralPoolViewModel(
-            ordersRealtime    = get(),
-            computeDistances  = get(),
+            ordersRealtime = get(),
+            computeDistances = get(),
             getDeviceLocations = get(),
             loadOrdersUseCase = get(),
         )

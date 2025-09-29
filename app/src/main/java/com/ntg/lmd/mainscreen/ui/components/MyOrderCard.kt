@@ -30,13 +30,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.generalpool.domain.model.OrderInfo
 import com.example.generalpool.domain.model.OrderStatus
+import com.example.generalpool.ui.components.OrderActions
+import com.example.generalpool.ui.model.MyOrderCardCallbacks
 import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
+import com.example.generalpool.utils.OrdersUiConstants.CARD_ELEVATION
+import com.example.generalpool.utils.OrdersUiConstants.DETAILS_BUTTON_WEIGHT
+import com.example.generalpool.utils.OrdersUiConstants.OUTLINE_STROKE
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.ui.components.OrdersUiConstants.CARD_ELEVATION
-import com.ntg.lmd.mainscreen.ui.components.OrdersUiConstants.DETAILS_BUTTON_WEIGHT
-import com.ntg.lmd.mainscreen.ui.components.OrdersUiConstants.OUTLINE_STROKE
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus
-import com.ntg.lmd.mainscreen.ui.model.MyOrderCardCallbacks
 
 @Composable
 fun myOrderCard(

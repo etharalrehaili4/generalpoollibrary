@@ -1,9 +1,9 @@
 package com.ntg.lmd.mainscreen.data.mapper
 
+import com.example.generalpool.data.models.OrderDto
 import com.example.generalpool.domain.model.OrderInfo
 import com.example.generalpool.domain.model.OrderStatus.Companion.fromId
 import com.example.generalpool.domain.model.RelativeTime
-import com.ntg.lmd.mainscreen.data.model.OrderDto
 import com.ntg.lmd.utils.AppDefaults
 
 private const val METERS_PER_KILOMETER = 1_000.0

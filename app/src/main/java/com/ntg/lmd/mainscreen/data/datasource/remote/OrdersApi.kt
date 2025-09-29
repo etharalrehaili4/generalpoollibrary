@@ -1,6 +1,6 @@
 package com.ntg.lmd.mainscreen.data.datasource.remote
 
-import com.ntg.lmd.mainscreen.data.model.OrdersEnvelope
+import com.example.generalpool.data.models.OrdersEnvelope
 import retrofit2.http.GET
 import retrofit2.http.Query
 

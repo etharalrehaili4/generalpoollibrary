@@ -14,13 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.generalpool.domain.model.OrderInfo
 import com.example.generalpool.domain.model.OrderStatus
+import com.example.generalpool.ui.components.OrderActions
+import com.example.generalpool.ui.model.MyOrderCardCallbacks
 import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.example.verticallist.PagingState
 import com.example.verticallist.defaultVerticalListConfig
 import com.example.verticallist.verticalListComponent
-import com.ntg.lmd.mainscreen.ui.components.OrderActions
 import com.ntg.lmd.mainscreen.ui.components.myOrderCard
-import com.ntg.lmd.mainscreen.ui.model.MyOrderCardCallbacks
 
 data class OrderListState(
     val orders: List<OrderInfo>,

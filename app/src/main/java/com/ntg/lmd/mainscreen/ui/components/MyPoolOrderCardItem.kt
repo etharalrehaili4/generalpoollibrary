@@ -6,9 +6,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.generalpool.domain.model.OrderInfo
+import com.example.generalpool.ui.components.OrderActions
+import com.example.generalpool.ui.model.MyOrderCardCallbacks
 import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
 import com.ntg.lmd.R
-import com.ntg.lmd.mainscreen.ui.model.MyOrderCardCallbacks
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
