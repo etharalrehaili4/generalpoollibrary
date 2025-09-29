@@ -1,6 +1,6 @@
 package com.example.generalpool.ui.model
 
-import com.example.generalpool.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.MapMarker
 import com.ntg.core.location.location.domain.model.MapUiState

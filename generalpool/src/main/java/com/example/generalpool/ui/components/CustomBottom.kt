@@ -20,9 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.generalpool.domain.model.OrderInfo
 import java.util.Locale
 import com.example.generalpool.R
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
 
 @Composable
 fun orderHeader(order: OrderInfo) {

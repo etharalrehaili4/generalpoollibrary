@@ -29,13 +29,13 @@ import androidx.navigation.NavController
 import com.example.auth.utils.SecureUserStore
 import com.example.generalpool.ui.model.GeneralPoolCallbacks
 import com.example.generalpool.ui.model.GeneralPoolUiState
-import com.example.generalpool.domain.model.OrderInfo
-import com.example.generalpool.domain.model.OrderStatus
+import com.example.lmdmypoolmyorder.domain.model.OrderStatus
 import com.example.generalpool.ui.components.distanceFilterBar
 import com.example.generalpool.ui.components.poolBottomContent
 import com.example.generalpool.ui.components.searchResultsDropdown
 import com.example.generalpool.ui.vm.GeneralPoolViewModel
-import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.screen.viewmodel.UpdateOrderStatusViewModel
 import com.ntg.core.location.location.domain.model.Coordinates
 import com.ntg.core.location.location.domain.model.IMapStates
 import com.ntg.core.location.location.domain.model.cameraUpdateZoom

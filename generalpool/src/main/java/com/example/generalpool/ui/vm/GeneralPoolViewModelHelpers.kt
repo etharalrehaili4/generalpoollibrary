@@ -1,8 +1,8 @@
 package com.example.generalpool.ui.vm
 
 import com.example.generalpool.ui.model.GeneralPoolUiState
-import com.example.generalpool.domain.model.OrderInfo
-import com.example.generalpool.domain.model.OrderStatus
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderStatus
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 

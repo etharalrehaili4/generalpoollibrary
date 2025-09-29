@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.generalpool.ui.model.GeneralPoolUiState
 import com.example.generalpool.data.models.Order
-import com.example.generalpool.domain.model.OrderInfo
 import com.example.generalpool.domain.usecase.LoadOrdersUseCase
 import com.example.generalpool.domain.usecase.OrdersRealtimeUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +18,9 @@ import com.ntg.core.location.location.domain.usecase.ComputeDistancesUseCase
 import com.ntg.core.location.location.domain.usecase.GetDeviceLocationsUseCase
 import android.location.Location
 import android.util.Log
-import com.example.generalpool.domain.model.OrderStatus
 import com.example.generalpool.ui.mapper.toUi
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderStatus
 import com.ntg.core.location.location.domain.model.Coordinates
 
 sealed class GeneralPoolUiEvent {

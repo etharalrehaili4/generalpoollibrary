@@ -1,9 +1,9 @@
 package com.example.generalpool.ui.mapper
 
 import com.example.generalpool.data.models.Order
-import com.example.generalpool.domain.model.OrderInfo
-import com.example.generalpool.domain.model.OrderStatus
-import com.example.generalpool.domain.model.RelativeTime
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderStatus
+import com.example.lmdmypoolmyorder.domain.model.RelativeTime
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale

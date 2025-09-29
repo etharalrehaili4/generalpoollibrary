@@ -28,14 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.generalpool.domain.model.OrderInfo
-import com.example.generalpool.domain.model.OrderStatus
-import com.example.generalpool.ui.components.OrderActions
-import com.example.generalpool.ui.model.MyOrderCardCallbacks
-import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
-import com.example.generalpool.utils.OrdersUiConstants.CARD_ELEVATION
-import com.example.generalpool.utils.OrdersUiConstants.DETAILS_BUTTON_WEIGHT
-import com.example.generalpool.utils.OrdersUiConstants.OUTLINE_STROKE
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderStatus
+import com.example.lmdmypoolmyorder.screen.component.OrderActions
+import com.example.lmdmypoolmyorder.screen.component.OrdersUiConstants.CARD_ELEVATION
+import com.example.lmdmypoolmyorder.screen.component.OrdersUiConstants.DETAILS_BUTTON_WEIGHT
+import com.example.lmdmypoolmyorder.screen.component.OrdersUiConstants.OUTLINE_STROKE
+import com.example.lmdmypoolmyorder.screen.model.MyOrderCardCallbacks
+import com.example.lmdmypoolmyorder.screen.viewmodel.UpdateOrderStatusViewModel
 import com.ntg.lmd.R
 import com.ntg.lmd.mainscreen.ui.model.LocalUiOnlyStatusBus
 

@@ -1,6 +1,6 @@
 package com.ntg.lmd.mainscreen.domain.model
 
-import com.example.generalpool.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
 
 data class OrdersPage(
     val items: List<OrderInfo>,

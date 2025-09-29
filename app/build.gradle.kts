@@ -208,6 +208,9 @@ dependencies {
 //    implementation("com.github.shsaudhrb:Login-Logout:-45d8644a89-1")
     implementation("com.github.shsaudhrb:Login-Logout:-SNAPSHOT")
 
+    // myorder mypool library
+    implementation("com.github.R-0515:MyOrderMyPool:1")
+
 //    implementation("com.google.maps.android:maps-compose:6.1.0")
 //    implementation("com.google.android.gms:play-services-maps:19.0.0")
 }

@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.generalpool.ui.model.GeneralPoolUiState
-import com.example.generalpool.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
 import com.ntg.horizontallist.GeneralHorizontalList
 import com.ntg.horizontallist.GeneralHorizontalListCallbacks
 

@@ -17,8 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.generalpool.domain.model.OrderInfo
 import com.example.generalpool.R
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
 
 @Composable
 fun searchResultsDropdown(

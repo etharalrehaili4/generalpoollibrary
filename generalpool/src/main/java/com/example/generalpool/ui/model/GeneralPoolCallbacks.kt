@@ -1,6 +1,6 @@
 package com.example.generalpool.ui.model
 
-import com.example.generalpool.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
 
 data class GeneralPoolCallbacks(
     val focusOnOrder: (OrderInfo, Boolean) -> Unit,

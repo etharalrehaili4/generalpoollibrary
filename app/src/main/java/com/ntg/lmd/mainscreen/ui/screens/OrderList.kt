@@ -12,11 +12,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.generalpool.domain.model.OrderInfo
-import com.example.generalpool.domain.model.OrderStatus
-import com.example.generalpool.ui.components.OrderActions
-import com.example.generalpool.ui.model.MyOrderCardCallbacks
-import com.example.generalpool.ui.vm.UpdateOrderStatusViewModel
+import com.example.lmdmypoolmyorder.domain.model.OrderInfo
+import com.example.lmdmypoolmyorder.domain.model.OrderStatus
+import com.example.lmdmypoolmyorder.screen.component.OrderActions
+import com.example.lmdmypoolmyorder.screen.model.MyOrderCardCallbacks
+import com.example.lmdmypoolmyorder.screen.viewmodel.UpdateOrderStatusViewModel
 import com.example.verticallist.PagingState
 import com.example.verticallist.defaultVerticalListConfig
 import com.example.verticallist.verticalListComponent
