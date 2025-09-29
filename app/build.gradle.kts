@@ -197,6 +197,9 @@ dependencies {
     //location lib
     implementation("com.github.R-0515:core-location:-SNAPSHOT")
 
+    //My order History Delivery lib
+    implementation("com.github.Raghad-almehmadi:MyorderHistoryDelivery:8")
+
     implementation(project(":generalpool"))
 
 //    implementation("com.google.maps.android:maps-compose:6.1.0")
